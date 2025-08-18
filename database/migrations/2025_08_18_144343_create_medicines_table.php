@@ -16,9 +16,9 @@ return new class extends Migration
             $table->string('name');
             $table->string('generic_name');
             $table->string('drug_class');
-            $table->string('form');
+            $table->foreignId('medicine_form_id')->constrained();
             $table->string('strength');
-            $table->string('route');
+            $table->foreignId('medicine_route_id')->constrained();
             $table->string('unit');
             $table->integer('stock');
             $table->decimal('price');
