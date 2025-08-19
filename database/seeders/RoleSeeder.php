@@ -16,11 +16,27 @@ class RoleSeeder extends Seeder
     {
         $adminRole = Role::create(["name" => "super admin"]);
 
+        $pharmacistRole = Role::create(['name' => 'pharmacist']);
+        $seeMedicinePermission = Permission::create(['name' => 'see medicine']);
+        $insertMedicinePermission = Permission::create(['name' => 'insert medicine']);
+        $editMedicinePermission = Permission::create(['name' => 'edit medicine']);
+        $deleteMedicinePermission = Permission::create(['name' => 'delete medicine']);
+
+        $pharmacistRole->givePermissionTo([
+            $seeMedicinePermission,
+            $insertMedicinePermission,
+            $editMedicinePermission,
+            $deleteMedicinePermission
+        ]);
+
         $doctorRole = Role::create(["name" => "doctor"]);
         $acceptPatientPermission = Permission::create(["name" => "accept patient"]);
-        $prescribeDrugsPermission = Permission::create(["name" => "prescribe drugs"]);
+        $prescribeMedicinePermission = Permission::create(["name" => "prescribe medicine"]);
 
-        $doctorRole->givePermissionTo($acceptPatientPermission);
-        $doctorRole->givePermissionTo($prescribeDrugsPermission);
+        $doctorRole->givePermissionTo([
+            $acceptPatientPermission,
+            $seeMedicinePermission,
+            $prescribeMedicinePermission
+        ]);
     }
 }
