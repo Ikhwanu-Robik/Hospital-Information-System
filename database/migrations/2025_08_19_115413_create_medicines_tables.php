@@ -40,9 +40,9 @@ return new class extends Migration
             $table->string('unit');
             $table->integer('stock')->default(0);
             $table->decimal('price');
-            $table->string('batch_number');
+            $table->text('batch_number');
             $table->date('expiry_date');
-            $table->string('manufacturer');
+            $table->text('manufacturer');
             $table->timestamps();
         });
     }

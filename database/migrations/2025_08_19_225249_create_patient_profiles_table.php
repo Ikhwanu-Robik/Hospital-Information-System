@@ -17,11 +17,11 @@ return new class extends Migration
                 ->unique()
                 ->constrained()
                 ->onDelete('cascade');
-            $table->string('full_name');
+            $table->text('full_name');
             $table->string('NIK');
             $table->date('birthdate');
             $table->string('gender');
-            $table->string('address');
+            $table->text('address');
             $table->boolean('marriage_status');
             $table->string('phone');
             $table->string('BPJS_number');

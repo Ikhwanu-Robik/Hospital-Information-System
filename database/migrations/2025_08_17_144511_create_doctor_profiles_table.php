@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\DoctorStatus;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
@@ -16,14 +17,14 @@ return new class extends Migration {
                 ->unique()
                 ->constrained()
                 ->onDelete('cascade');
-            $table->string('full_name');
+            $table->text('full_name');
             $table->string('license_number')->unique();
             $table->string('phone');
             $table->string('department');
             $table->foreignId('specialization_id')
                 ->constrained();
             $table->string('room_number');
-            $table->string('status'); // correspond to App\Enums\DoctorStatus
+            $table->enum('status', array_column(DoctorStatus::cases(), 'value'));
             // this json will be an array like this
             // [
             //      "Mon 07:00:00 18:00:00",
