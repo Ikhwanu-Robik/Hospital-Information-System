@@ -4,6 +4,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Models\DoctorProfile;
+use App\Models\PatientProfile;
 use App\Models\PharmacistProfile;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Notifications\Notifiable;
@@ -53,6 +54,11 @@ class User extends Authenticatable
     public function doctorProfile()
     {
         return $this->hasOne(DoctorProfile::class);
+    }
+
+    public function patientProfile()
+    {
+        return $this->hasOne(PatientProfile::class);
     }
 
     public function pharmacistProfile()
