@@ -2,10 +2,12 @@
 
 namespace App\Http\Middleware;
 
-use App\Models\User;
 use Closure;
+use App\Models\User;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class CheckIfAdmin
 {
@@ -30,7 +32,11 @@ class CheckIfAdmin
      */
     private function checkIfUserIsAdmin($user)
     {
-        return $user->hasRole('super admin');
+        if (!$user->hasRole('super admin')) {
+            return throw new NotFoundHttpException();
+        }
+
+        return backpack_user()->hasRole('super admin');
     }
 
     /**

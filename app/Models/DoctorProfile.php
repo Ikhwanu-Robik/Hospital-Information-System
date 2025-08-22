@@ -2,10 +2,14 @@
 
 namespace App\Models;
 
+use Backpack\CRUD\app\Models\Traits\CrudTrait;
+use App\Models\User;
+use App\Models\Specialization;
 use Illuminate\Database\Eloquent\Model;
 
 class DoctorProfile extends Model
 {
+    use CrudTrait;
     protected $fillable = [
         'user_id',
         'full_name',
@@ -17,6 +21,11 @@ class DoctorProfile extends Model
         'status',
         'schedule'
     ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 
     public function specialization()
     {

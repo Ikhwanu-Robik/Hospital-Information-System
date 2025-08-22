@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Backpack\CRUD\app\Models\Traits\CrudTrait;
 use App\Models\DrugClass;
 use App\Models\MedicineForm;
 use App\Models\MedicineRoute;
@@ -9,6 +10,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Medicine extends Model
 {
+    use CrudTrait;
     protected $fillable = [
         'name',
         'generic_name',
