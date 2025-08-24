@@ -20,7 +20,7 @@ return new class extends Migration
             $table->text('full_name');
             $table->string('NIK');
             $table->date('birthdate');
-            $table->string('gender');
+            $table->enum('gender', ["male", "female"]);
             $table->text('address');
             $table->boolean('marriage_status');
             $table->string('phone');
