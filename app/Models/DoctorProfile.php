@@ -2,10 +2,11 @@
 
 namespace App\Models;
 
-use Backpack\CRUD\app\Models\Traits\CrudTrait;
 use App\Models\User;
+use App\Models\DoctorSchedule;
 use App\Models\Specialization;
 use Illuminate\Database\Eloquent\Model;
+use Backpack\CRUD\app\Models\Traits\CrudTrait;
 
 class DoctorProfile extends Model
 {
@@ -18,8 +19,7 @@ class DoctorProfile extends Model
         'department',
         'specialization_id',
         'room_number',
-        'status',
-        'schedule'
+        'status'
     ];
 
     public function user()
@@ -30,5 +30,10 @@ class DoctorProfile extends Model
     public function specialization()
     {
         return $this->belongsTo(Specialization::class);
+    }
+
+    public function schedules()
+    {
+        return $this->hasMany(DoctorSchedule::class);
     }
 }

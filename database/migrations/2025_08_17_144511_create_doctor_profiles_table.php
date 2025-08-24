@@ -25,12 +25,6 @@ return new class extends Migration {
                 ->constrained();
             $table->string('room_number');
             $table->enum('status', array_column(DoctorStatus::cases(), 'value'));
-            // this json will be an array like this
-            // [
-            //      "Mon 07:00:00 18:00:00",
-            //      "Tue 08:00:00 16:00:00",
-            // ]
-            $table->json('schedule')->nullable();
             $table->timestamps();
         });
     }

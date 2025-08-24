@@ -4,6 +4,7 @@
 
 <x-backpack::menu-dropdown title="Doctor" icons="la la-group">
     <x-backpack::menu-dropdown-item title="Doctor profiles" icon="la la-question" :link="backpack_url('doctor-profile')" />
+    <x-backpack::menu-dropdown-item title="Doctor schedules" icon="la la-question" :link="backpack_url('doctor-schedule')" />
     <x-backpack::menu-dropdown-item title="Specializations" icon="la la-question" :link="backpack_url('specialization')" />
 </x-backpack::menu-dropdown>
 <x-backpack::menu-dropdown title="Medical Records" icons="la la-group">
