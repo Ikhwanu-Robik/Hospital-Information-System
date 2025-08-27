@@ -31,5 +31,15 @@ class AppServiceProvider extends ServiceProvider
         // I am adding ability check at the second UserCrudController,
         // so I 'redirect' all call to the first UserCrudController
         // to the second UserCrudController
+
+        $this->app->bind(
+            \Backpack\PermissionManager\app\Http\Controllers\RoleCrudController::class,
+            \App\Http\Controllers\Admin\RoleCrudController::class
+        );
+
+        $this->app->bind(
+            \Backpack\PermissionManager\app\Http\Controllers\PermissionCrudController::class,
+            \App\Http\Controllers\Admin\PermissionCrudController::class
+        );
     }
 }
