@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\SellMedicineController;
 use Illuminate\Support\Facades\Route;
 
 // --------------------------
@@ -16,6 +17,13 @@ Route::group([
     ),
     'namespace' => 'App\Http\Controllers\Admin',
 ], function () { // custom admin routes    
+
+    Route::group(['prefix' => '/medicines/dispense'], function () {
+        Route::get('/', [SellMedicineController::class, 'index'])->name('sell-medicine');
+        Route::get('/search-medicine', [SellMedicineController::class, 'searchMedicines'])->name('search-medicine');
+        Route::post('/buy', [SellMedicineController::class, 'buyMedicines'])->name('buy-medicines');
+    });
+
     Route::crud('doctor-profile', 'DoctorProfileCrudController');
     Route::crud('drug-class', 'DrugClassCrudController');
     Route::crud('medical-record', 'MedicalRecordCrudController');

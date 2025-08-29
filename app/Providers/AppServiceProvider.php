@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Services\BPJS;
+use App\Services\BuyMedicines;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
 
@@ -41,5 +43,13 @@ class AppServiceProvider extends ServiceProvider
             \Backpack\PermissionManager\app\Http\Controllers\PermissionCrudController::class,
             \App\Http\Controllers\Admin\PermissionCrudController::class
         );
+
+        $this->app->singleton('bpjs', function ($app) {
+            return new BPJS;
+        });
+
+        $this->app->singleton('buyMedicines', function ($app) {
+            return new BuyMedicines;
+        });
     }
 }

@@ -2,9 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Models\Medicine;
-use App\Models\DrugClass;
-use Illuminate\Support\Facades\Log;
+use App\Traits\CrudAuthorization;
 use App\Http\Requests\MedicineRequest;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
@@ -21,6 +19,7 @@ class MedicineCrudController extends CrudController
     use \Backpack\CRUD\app\Http\Controllers\Operations\UpdateOperation;
     use \Backpack\CRUD\app\Http\Controllers\Operations\DeleteOperation;
     use \Backpack\CRUD\app\Http\Controllers\Operations\ShowOperation;
+    use CrudAuthorization; 
 
     /**
      * Configure the CrudPanel object. Apply settings to all operations.
@@ -32,6 +31,7 @@ class MedicineCrudController extends CrudController
         CRUD::setModel(\App\Models\Medicine::class);
         CRUD::setRoute(config('backpack.base.route_prefix') . '/medicine');
         CRUD::setEntityNameStrings('medicine', 'medicines');
+        $this->determineResourcePermission();
     }
 
     /**
@@ -46,10 +46,6 @@ class MedicineCrudController extends CrudController
 
         CRUD::column('name');
         CRUD::column('generic_name');
-        // I tried using column()
-        // and chain it
-        // with several methods,
-        // didn't work
         $this->crud->addColumn(
                 [
                     'label' => 'Drug Class',
@@ -100,6 +96,25 @@ class MedicineCrudController extends CrudController
     {
         CRUD::setValidation(MedicineRequest::class);
         CRUD::setFromDb(); // set fields from db columns.
+        $this->crud->addField([
+            'name' => 'drug_class_id',
+            'type' => 'select',
+            'entity' => 'drugClass'
+        ]);
+        $this->crud->addField([
+            'name' => 'medicine_form_id',
+            'type' => 'select',
+            'entity' => 'medicineForm',
+            'model' => 'App\Models\MedicineForm',
+            'attribute' => 'name'
+        ]);
+        $this->crud->addField([
+            'name' => 'medicine_route_id',
+            'type' => 'select',
+            'entity' => 'medicineRoute',
+            'model' => 'App\Models\MedicineRoute',
+            'attribute' => 'name'
+        ]);
 
         /**
          * Fields can be defined using the fluent syntax:

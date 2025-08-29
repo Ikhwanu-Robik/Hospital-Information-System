@@ -32,4 +32,12 @@
     <x-backpack::menu-item title="Users" icon="la la-question" :link="backpack_url('user')" />
     <x-backpack::menu-item title="Roles" icon="la la-question" :link="backpack_url('role')" />
     <x-backpack::menu-item title="Permissions" icon="la la-question" :link="backpack_url('permission')" />
+@elseif (backpack_user()->hasRole('pharmacist'))
+    <x-backpack::menu-item title="Drug classes" icon="la la-question" :link="backpack_url('drug-class')" />
+    <x-backpack::menu-item title="Medicines" icon="la la-question" :link="backpack_url('medicine')" />
+    <x-backpack::menu-item title="Medicine forms" icon="la la-question" :link="backpack_url('medicine-form')" />
+    <x-backpack::menu-item title="Medicine routes" icon="la la-question" :link="backpack_url('medicine-route')" />
+    <li class="nav-item"><a class="nav-link" href="{{ route('sell-medicine') }}"><i class="la la-question nav-icon"></i>
+            Dispense Medicines</a></li>
+    <x-backpack::menu-item title="Sell Medicines" icon="la la-question" :link="route("medicine.sell")" />
 @endif

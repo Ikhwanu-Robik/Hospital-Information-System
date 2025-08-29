@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Requests\MedicineRouteRequest;
+use App\Traits\CrudAuthorization;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
 
@@ -18,6 +19,7 @@ class MedicineRouteCrudController extends CrudController
     use \Backpack\CRUD\app\Http\Controllers\Operations\UpdateOperation;
     use \Backpack\CRUD\app\Http\Controllers\Operations\DeleteOperation;
     use \Backpack\CRUD\app\Http\Controllers\Operations\ShowOperation;
+    use CrudAuthorization;
 
     /**
      * Configure the CrudPanel object. Apply settings to all operations.
@@ -29,6 +31,7 @@ class MedicineRouteCrudController extends CrudController
         CRUD::setModel(\App\Models\MedicineRoute::class);
         CRUD::setRoute(config('backpack.base.route_prefix') . '/medicine-route');
         CRUD::setEntityNameStrings('medicine route', 'medicine routes');
+        $this->determineResourcePermission();
     }
 
     /**

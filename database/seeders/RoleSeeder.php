@@ -17,16 +17,48 @@ class RoleSeeder extends Seeder
         $adminRole = Role::create(["name" => "super admin"]);
 
         $pharmacistRole = Role::create(['name' => 'pharmacist']);
-        $seeMedicinePermission = Permission::create(['name' => 'see medicine']);
-        $insertMedicinePermission = Permission::create(['name' => 'insert medicine']);
-        $editMedicinePermission = Permission::create(['name' => 'edit medicine']);
-        $deleteMedicinePermission = Permission::create(['name' => 'delete medicine']);
+        Permission::create(['name' => 'medicine.list']);
+        Permission::create(['name' => 'medicine.show']);
+        Permission::create(['name' => 'medicine.create']);
+        Permission::create(['name' => 'medicine.update']);
+        Permission::create(['name' => 'medicine.delete']);
+        Permission::create(['name' => 'drug class.list']);
+        Permission::create(['name' => 'drug class.show']);
+        Permission::create(['name' => 'drug class.create']);
+        Permission::create(['name' => 'drug class.update']);
+        Permission::create(['name' => 'drug class.delete']);
+        Permission::create(['name' => 'medicine form.list']);
+        Permission::create(['name' => 'medicine form.show']);
+        Permission::create(['name' => 'medicine form.create']);
+        Permission::create(['name' => 'medicine form.update']);
+        Permission::create(['name' => 'medicine form.delete']);
+        Permission::create(['name' => 'medicine route.list']);
+        Permission::create(['name' => 'medicine route.show']);
+        Permission::create(['name' => 'medicine route.create']);
+        Permission::create(['name' => 'medicine route.update']);
+        Permission::create(['name' => 'medicine route.delete']);
 
         $pharmacistRole->givePermissionTo([
-            $seeMedicinePermission,
-            $insertMedicinePermission,
-            $editMedicinePermission,
-            $deleteMedicinePermission
+            'medicine.list',
+            'medicine.show',
+            'medicine.create',
+            'medicine.update',
+            'medicine.delete',
+            'drug class.list',
+            'drug class.show',
+            'drug class.create',
+            'drug class.update',
+            'drug class.delete',
+            'medicine form.list',
+            'medicine form.show',
+            'medicine form.create',
+            'medicine form.update',
+            'medicine form.delete',
+            'medicine route.list',
+            'medicine route.show',
+            'medicine route.create',
+            'medicine route.update',
+            'medicine route.delete',
         ]);
 
         $doctorRole = Role::create(["name" => "doctor"]);
@@ -35,7 +67,8 @@ class RoleSeeder extends Seeder
 
         $doctorRole->givePermissionTo([
             $acceptPatientPermission,
-            $seeMedicinePermission,
+            'medicine.list',
+            'medicine.show',
             $prescribeMedicinePermission
         ]);
 
