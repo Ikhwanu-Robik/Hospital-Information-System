@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Backpack\CRUD\app\Models\Traits\CrudTrait;
 use App\Models\DoctorProfile;
-use App\Models\PatientProfile;
+use App\Models\Patient;
 use App\Models\PrescriptionRecord;
 use Illuminate\Database\Eloquent\Model;
 
@@ -12,15 +12,15 @@ class MedicalRecord extends Model
 {
     use CrudTrait;
     protected $fillable = [
-        'patient_profile_id',
+        'patient_id',
         'doctor_profile_id',
         'complaint',
         'diagnosis'
     ];
 
-    public function patientProfile()
+    public function patient()
     {
-        return $this->belongsTo(PatientProfile::class);
+        return $this->belongsTo(Patient::class);
     }
 
     public function doctorProfile()

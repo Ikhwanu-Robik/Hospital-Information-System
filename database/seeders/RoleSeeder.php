@@ -72,17 +72,6 @@ class RoleSeeder extends Seeder
             $prescribeMedicinePermission
         ]);
 
-        $patientRole = Role::create(['name' => 'patient']);
-        $queuePermission = Permission::create(['name' => 'queue']);
-        $checkUpPermission = Permission::create(['name' => 'check up']);
-        $dispensePrescriptionPermission = Permission::create(['name' => 'dispense prescription']);
-
-        $patientRole->givePermissionTo([
-            $queuePermission,
-            $checkUpPermission,
-            $dispensePrescriptionPermission
-        ]);
-
         $administrationOfficer = Role::create(['name' => 'administration_officer']);
         $directPatientPermission = Permission::create(['name' => 'direct patient']);
         $administrationOfficer->givePermissionTo([

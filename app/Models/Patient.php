@@ -3,15 +3,16 @@
 namespace App\Models;
 
 use Backpack\CRUD\app\Models\Traits\CrudTrait;
-use App\Models\User;
 use App\Models\MedicalRecord;
 use Illuminate\Database\Eloquent\Model;
 
-class PatientProfile extends Model
+class Patient extends Model
 {
     use CrudTrait;
     protected $fillable = [
-        'user_id',
+        // 'user_id',       
+        // TODO: make PatientProfile independent of User
+        // because patients cannot log in
         'full_name',
         'NIK',
         'birthdate',
@@ -21,11 +22,6 @@ class PatientProfile extends Model
         'phone',
         'BPJS_number'
     ];
-
-    public function user()
-    {
-        return $this->belongsTo(User::class);
-    }
 
     public function medicalRecords()
     {

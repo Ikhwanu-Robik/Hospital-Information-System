@@ -11,12 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('patient_profiles', function (Blueprint $table) {
+        Schema::create('patients', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')
-                ->unique()
-                ->constrained()
-                ->onDelete('cascade');
             $table->text('full_name');
             $table->string('NIK');
             $table->date('birthdate');
@@ -34,6 +30,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('patient_profiles');
+        Schema::dropIfExists('patients');
     }
 };

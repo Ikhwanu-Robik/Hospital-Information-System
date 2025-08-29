@@ -41,11 +41,11 @@ class MedicalRecordCrudController extends CrudController
     {
         $this->crud->addColumns([
             [
-                'name' => 'patient_profile_id',
+                'name' => 'patient_id',
                 'type' => 'select',
-                'entity' => 'patientProfile',
+                'entity' => 'patient',
                 'attribute' => 'full_name',
-                'model' => "App\Models\PatientProfile"
+                'model' => "App\Models\Patient"
             ],
             [
                 'name' => 'doctor_profile_id',
@@ -79,7 +79,7 @@ class MedicalRecordCrudController extends CrudController
         CRUD::setValidation(MedicalRecordRequest::class);
         // CRUD::setFromDb(); // set fields from db columns.
 
-        CRUD::field('patient_profile_id')->type('select')->entity('patientProfile');
+        CRUD::field('patient_id')->type('select')->entity('patient');
         CRUD::field('doctor_profile_id')->type('select')->entity('doctorProfile');
         CRUD::field('complaint');
         CRUD::field('diagnosis');

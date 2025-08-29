@@ -2,16 +2,16 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Requests\PatientProfileRequest;
+use App\Http\Requests\PatientRequest;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
 
 /**
- * Class PatientProfileCrudController
+ * Class PatientCrudController
  * @package App\Http\Controllers\Admin
  * @property-read \Backpack\CRUD\app\Library\CrudPanel\CrudPanel $crud
  */
-class PatientProfileCrudController extends CrudController
+class PatientCrudController extends CrudController
 {
     use \Backpack\CRUD\app\Http\Controllers\Operations\ListOperation;
     use \Backpack\CRUD\app\Http\Controllers\Operations\CreateOperation;
@@ -26,9 +26,9 @@ class PatientProfileCrudController extends CrudController
      */
     public function setup()
     {
-        CRUD::setModel(\App\Models\PatientProfile::class);
-        CRUD::setRoute(config('backpack.base.route_prefix') . '/patient-profile');
-        CRUD::setEntityNameStrings('patient profile', 'patient profiles');
+        CRUD::setModel(\App\Models\Patient::class);
+        CRUD::setRoute(config('backpack.base.route_prefix') . '/patient');
+        CRUD::setEntityNameStrings('patient', 'patients');
     }
 
     /**
@@ -55,15 +55,8 @@ class PatientProfileCrudController extends CrudController
      */
     protected function setupCreateOperation()
     {
-        CRUD::setValidation(PatientProfileRequest::class);
+        CRUD::setValidation(PatientRequest::class);
         CRUD::setFromDb(); // set fields from db columns.
-        $this->crud->addField([
-            'name' => 'user_id',
-            'type' => 'select',
-            'entity' => 'user',
-            'attribute' => 'name',
-            'model' => "App\Models\User"
-        ]);
         $this->crud->addField([
             'name' => 'gender',
             'type' => 'select_from_array',

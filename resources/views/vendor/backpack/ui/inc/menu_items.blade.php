@@ -11,6 +11,7 @@
         <x-backpack::menu-dropdown-item title="Specializations" icon="la la-question"
             :link="backpack_url('specialization')" />
     </x-backpack::menu-dropdown>
+    <x-backpack::menu-item title="Patients" icon="la la-question" :link="backpack_url('patient')" />
     <x-backpack::menu-dropdown title="Medical Records" icons="la la-group">
         <x-backpack::menu-dropdown-item title="Medical records" icon="la la-question"
             :link="backpack_url('medical-record')" />
@@ -27,7 +28,6 @@
         <x-backpack::menu-dropdown-item title="Medicine routes" icon="la la-question"
             :link="backpack_url('medicine-route')" />
     </x-backpack::menu-dropdown>
-    <x-backpack::menu-item title="Patient profiles" icon="la la-question" :link="backpack_url('patient-profile')" />
     <x-backpack::menu-item title="Pharmacist profiles" icon="la la-question" :link="backpack_url('pharmacist-profile')" />
     <x-backpack::menu-item title="Users" icon="la la-question" :link="backpack_url('user')" />
     <x-backpack::menu-item title="Roles" icon="la la-question" :link="backpack_url('role')" />

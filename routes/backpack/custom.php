@@ -30,13 +30,13 @@ Route::group([
     Route::crud('medicine', 'MedicineCrudController');
     Route::crud('medicine-form', 'MedicineFormCrudController');
     Route::crud('medicine-route', 'MedicineRouteCrudController');
-    Route::crud('patient-profile', 'PatientProfileCrudController');
     Route::crud('pharmacist-profile', 'PharmacistProfileCrudController');
     Route::crud('prescription-medicine', 'PrescriptionMedicineCrudController');
     Route::crud('prescription-record', 'PrescriptionRecordCrudController');
     Route::crud('specialization', 'SpecializationCrudController');
     Route::crud('user', 'UserCrudController');
     Route::crud('doctor-schedule', 'DoctorScheduleCrudController');
+    Route::crud('patient', 'PatientCrudController');
 }); // this should be the absolute last line of this file
 
 /**

@@ -29,9 +29,9 @@ class SellMedicineController extends CrudController
     public function buyMedicines(BuyMedicineRequest $buyMedicineRequest)
     {
         $prescriptionRecord = PrescriptionRecord::find($buyMedicineRequest['id']);
-        $medicalRecord = PrescriptionRecord::with('medicalRecord.patientProfile')
+        $medicalRecord = PrescriptionRecord::with('medicalRecord.patient')
             ->find($buyMedicineRequest['id'])->medicalRecord;
-        if (!BPJS::validatePatient($medicalRecord->patientProfile->BPJS_number)) {
+        if (!BPJS::validatePatient($medicalRecord->patient->BPJS_number)) {
             BuyMedicines::withPrescription($prescriptionRecord)->buy();
             BuyMedicines::withPrescription($prescriptionRecord)->reduceMedicineStock();
         } else {
