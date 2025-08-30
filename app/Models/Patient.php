@@ -10,9 +10,6 @@ class Patient extends Model
 {
     use CrudTrait;
     protected $fillable = [
-        // 'user_id',       
-        // TODO: make PatientProfile independent of User
-        // because patients cannot log in
         'full_name',
         'NIK',
         'birthdate',

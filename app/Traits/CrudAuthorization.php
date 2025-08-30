@@ -36,4 +36,14 @@ trait CrudAuthorization
         }
     }
 
+    protected function administrationAuth()
+    {
+        if (backpack_user()->cannot('direct patient')) {
+            CRUD::denyAccess(['list', 'show', 'create', 'update', 'delete']);
+        }
+        else if (backpack_user()->can('direct patient')) {
+            CRUD::denyAccess(['delete']);
+            CRUD::allowAccess(['list', 'show', 'create', 'update']);
+        }
+    }
 }

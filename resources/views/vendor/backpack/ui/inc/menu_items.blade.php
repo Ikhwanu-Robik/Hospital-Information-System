@@ -40,4 +40,6 @@
     <li class="nav-item"><a class="nav-link" href="{{ route('sell-medicine') }}"><i class="la la-question nav-icon"></i>
             Dispense Medicines</a></li>
     <x-backpack::menu-item title="Sell Medicines" icon="la la-question" :link="route("medicine.sell")" />
+@elseif (backpack_user()->hasRole('administration officer'))
+    <x-backpack::menu-item title="Patients" icon="la la-question" :link="backpack_url('patient')" />
 @endif

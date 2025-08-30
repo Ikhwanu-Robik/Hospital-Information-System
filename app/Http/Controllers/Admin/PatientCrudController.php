@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Requests\PatientRequest;
+use App\Traits\CrudAuthorization;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
 
@@ -18,6 +19,8 @@ class PatientCrudController extends CrudController
     use \Backpack\CRUD\app\Http\Controllers\Operations\UpdateOperation;
     use \Backpack\CRUD\app\Http\Controllers\Operations\DeleteOperation;
     use \Backpack\CRUD\app\Http\Controllers\Operations\ShowOperation;
+    use \App\Http\Controllers\Admin\Operations\PrintPatientCardOperation;
+    use CrudAuthorization;
 
     /**
      * Configure the CrudPanel object. Apply settings to all operations.
@@ -29,6 +32,7 @@ class PatientCrudController extends CrudController
         CRUD::setModel(\App\Models\Patient::class);
         CRUD::setRoute(config('backpack.base.route_prefix') . '/patient');
         CRUD::setEntityNameStrings('patient', 'patients');
+        $this->administrationAuth();
     }
 
     /**

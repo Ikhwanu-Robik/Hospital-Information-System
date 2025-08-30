@@ -72,7 +72,7 @@ class RoleSeeder extends Seeder
             $prescribeMedicinePermission
         ]);
 
-        $administrationOfficer = Role::create(['name' => 'administration_officer']);
+        $administrationOfficer = Role::create(['name' => 'administration officer']);
         $directPatientPermission = Permission::create(['name' => 'direct patient']);
         $administrationOfficer->givePermissionTo([
             $directPatientPermission
