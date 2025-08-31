@@ -20,7 +20,8 @@
 
                 {{-- Patient Details --}}
                 <div class="flex-grow-1">
-                    <h6 class="fw-bold mb-1">{{ $patient->full_name }}</h6>
+                    <h6 class="mb-1">{{ $patient->medical_record_number }}</h6>
+                    <h4 class="fw-bold mb-1">{{ $patient->full_name }}</h6>
                     <p class="mb-1"><strong>NIK:</strong> {{ $patient->NIK }}</p>
                     <p class="mb-1"><strong>Birthdate:</strong> {{ $patient->birthdate }}</p>
                     <p class="mb-1"><strong>Gender:</strong> {{ ucfirst($patient->gender) }}</p>

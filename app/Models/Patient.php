@@ -10,6 +10,7 @@ class Patient extends Model
 {
     use CrudTrait;
     protected $fillable = [
+        'medical_record_number',
         'full_name',
         'NIK',
         'birthdate',

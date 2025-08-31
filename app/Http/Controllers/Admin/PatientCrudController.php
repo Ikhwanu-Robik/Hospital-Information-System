@@ -61,6 +61,7 @@ class PatientCrudController extends CrudController
     {
         CRUD::setValidation(PatientRequest::class);
         CRUD::setFromDb(); // set fields from db columns.
+        $this->crud->removeField('medical_record_number');
         $this->crud->addField([
             'name' => 'gender',
             'type' => 'select_from_array',

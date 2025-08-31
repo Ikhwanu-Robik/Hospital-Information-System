@@ -3,7 +3,9 @@
 namespace App\Providers;
 
 use App\Services\BPJS;
+use App\Models\Patient;
 use App\Services\BuyMedicines;
+use App\Observers\PatientObserver;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
 
@@ -51,5 +53,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->singleton('buyMedicines', function ($app) {
             return new BuyMedicines;
         });
+
+        Patient::observe(PatientObserver::class);
     }
 }
