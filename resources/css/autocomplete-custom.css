@@ -1,0 +1,42 @@
+/* Root wrapper <div> */
+.aa-inline-root {
+  display: inline-block;   /* instead of block */
+  vertical-align: middle;  /* align nicely with labels/buttons */
+  margin: 0;
+  padding: 0;
+}
+
+.aa-SubmitButton {
+  display: none !important;
+}
+
+/* Inline form wrapper */
+.aa-inline-form {
+  display: inline-flex;       /* keep form inline */
+  align-items: center;
+  gap: 0.5rem;                /* space between input and button (if any) */
+  margin: 0;
+  padding: 0;
+  border: none;
+  background: transparent;
+  box-shadow: none;
+}
+
+/* Input field */
+.aa-inline-input {
+  display: inline-block;
+  height: 2rem;               /* compact height */
+  padding: 0 0.5rem;
+  border: 1px solid #ced4da;  /* subtle border like Bootstrap/Tabler */
+  border-radius: 4px;
+  font-size: 0.875rem;        /* smaller font for inline look */
+  line-height: 1.5;
+  background-color: #fff;
+  width: 200px;               /* adjust as needed */
+}
+
+.aa-inline-input:focus {
+  outline: none;
+  border-color: #495057;      /* darker on focus */
+  box-shadow: 0 0 0 2px rgba(0,123,255,0.25);
+}
