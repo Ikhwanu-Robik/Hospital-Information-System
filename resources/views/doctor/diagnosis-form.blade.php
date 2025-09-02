@@ -3,27 +3,11 @@
 <head>
    <meta name="doctor-profile-id" content="{{ Auth::user()->doctorProfile()->first()->id }}">
    <meta name="medicines" content="{{ json_encode($medicines) }}">
+   @vite('resources/js/listenToPatient.js')
    @vite('resources/css/autocomplete-custom.css')
    @vite('resources/js/useAutoComplete.js')
    @vite('resources/css/diagnosis-form.css')
 </head>
-
-{{--
-TODO: make a page for doctor to:
-1. accept a patient automatically if in schedule,
-and not handling any patient
-(event broadcasting)
-(doctor doesn't need to refresh)
-(how did I make this without queueing system?)
-
-2. create a medical record for the patient
-3. create a medicine prescription for the patient
-(doctor can see a list of available medicines)
-(or just the list of medicines?)
-(or just a search bar of the medicine name with autocomplete?)
-4. dismiss the patient once finished
-(button)
---}}
 
 <body>
    <h1>Diagnose A Patient</h1>
@@ -37,35 +21,35 @@ and not handling any patient
             <tbody>
                <tr>
                   <th>MRN</th>
-                  <td id="medical-record-number">MRN-2025-000001</td>
+                  <td id="medical-record-number"></td>
                </tr>
                <tr>
                   <th>Full Name</th>
-                  <td id="full-name">Tiansi Nandika Ramadani</td>
+                  <td id="full-name"></td>
                </tr>
                <tr>
                   <th>Birthdate</th>
-                  <td id="birthdate">12 March 2008</td>
+                  <td id="birthdate"></td>
                </tr>
                <tr>
                   <th>Gender</th>
-                  <td id="gender">Female</td>
+                  <td id="gender"></td>
                </tr>
                <tr>
                   <th>Address</th>
-                  <td id="address">Weru Brother</td>
+                  <td id="address"></td>
                </tr>
                <tr>
                   <th>Married</th>
-                  <td id="status">No</td>
+                  <td id="status"></td>
                </tr>
                <tr>
                   <th>Phone</th>
-                  <td id="phone">0816738823</td>
+                  <td id="phone"></td>
                </tr>
                <tr>
                   <th>BPJS</th>
-                  <td id="BPJS_number">No</td>
+                  <td id="BPJS_number"></td>
                </tr>
             </tbody>
          </table>
@@ -88,22 +72,6 @@ and not handling any patient
                </tr>
             </thead>
             <tbody id="medical-records-tbody">
-               {{-- @foreach ($patient->medicalRecords as $medicalRecord) --}}
-               <tr>
-                  <td>Budi Santoso Utomo</td>
-                  <td>Cardiologist</td>
-                  <td>Nyeri kepala di sebelah belakang</td>
-                  <td>Hipertensi</td>
-                  <td>
-                     <ul>
-                        {{-- @foreach ($medicalRecord->prescriptionRecord->prescriptionMedicines as
-                        $prescriptionMedicine) --}}
-                        <li>Panadol x 5 | 3 times a day, before meal</li>
-                        {{-- @endforeach --}}
-                     </ul>
-                  </td>
-               </tr>
-               {{-- @endforeach --}}
             </tbody>
          </table>
       </div>
