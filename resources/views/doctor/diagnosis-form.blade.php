@@ -7,6 +7,7 @@
    @vite('resources/css/autocomplete-custom.css')
    @vite('resources/js/useAutoComplete.js')
    @vite('resources/css/diagnosis-form.css')
+   @vite('resources/js/validateMedicineForm.js')
 </head>
 
 <body>
@@ -77,13 +78,16 @@
       </div>
    </div>
 
-   <form action="" method="post" id="medical_record_form">
+   <form action="{{ route('doctor.diagnosis') }}" method="post" id="medical_record_form">
       @csrf
-      <input type="hidden" name="medical_record_number" value="MRN-2025-000001">
+      <input type="hidden" name="medical_record_number" value="">
       <label for="complaint">Complaint</label>
-      <input type="text" name="complaint" id="complaint">
+      <textarea name="complaint" id="complaint"></textarea>
       <label for="diagnosis">Diagnosis</label>
-      <input type="text" name="diagnosis" id="diagnosis">
+      <textarea name="diagnosis" id="diagnosis"></textarea>
+      {{-- // TODO: move #add_prescription_button below #prescriptioin-field-container,
+               also needs to modify the js--}}
+      {{-- //TODO: consider rearranging the medicine prescription layout into table --}}
       <button id="add_prescription_button">Add Prescription</button>
       <div id="prescription-fields-container">
 
