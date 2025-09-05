@@ -1,19 +1,14 @@
 <?php
 
-use App\Models\User;
-use App\Models\Patient;
-use App\Models\Medicine;
-use Illuminate\Http\Request;
-use App\Models\DoctorProfile;
+use App\Http\Controllers\CheckUpController;
 use Illuminate\Support\Facades\Route;
-use App\Events\PatientWishToMeetDoctor;
 
 require('auth.php');
 
-Route::get('/', function () {
-    return view('index');
-})->middleware('auth');
+Route::get('/diagnose', [CheckUpController::class, 'diagnoseForm'])->middleware('auth')->name('doctor.diagnosis-form');
 
-Route::get('/diagnose', function () {
-    return view('doctor.diagnosis-form', ['medicines' => Medicine::all()->jsonSerialize()]);
-})->middleware('auth')->name('doctor.diagnosis-form');
+Route::post('/diagnosis', [CheckUpController::class, 'diagnosis'])->middleware('auth')->name('doctor.diagnosis');
+
+Route::get('/queue', [CheckUpController::class, 'queueForm'])->name('check-up-queue-form');
+
+Route::post('/queue', [CheckUpController::class, 'joinQueue'])->name('join-check-up-queue');
