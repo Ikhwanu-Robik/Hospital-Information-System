@@ -14,6 +14,7 @@ function applyAutocomplete(elementDisplay, elementData) {
             input: "aa-inline-input",
             submitButton: "aa-hide-button",
         },
+        defaultActiveItemId: 0,
         getSources({ query }) {
             return [
                 {
@@ -34,11 +35,38 @@ function applyAutocomplete(elementDisplay, elementData) {
                     onSelect({ item, setQuery }) {
                         setQuery(item.name);
                         elementData.value = item.id;
+                        removeWarningLabel(elementData.parentElement);
                     },
                 },
             ];
         },
+        onStateChange() {
+            elementData.value = "";
+            if (elementData.value == "") {
+                let warningLabel = document.createElement("label");
+                warningLabel.style = "color: red";
+                warningLabel.className = "select-medicine-warning-label";
+                warningLabel.textContent =
+                    "you must select a medicine from the suggestion list";
+
+                removeWarningLabel(elementData.parentElement);
+
+                elementData.parentElement.prepend(warningLabel);
+            }
+        },
     });
+}
+
+function removeWarningLabel(parent) {
+    let warningLabel = null;
+    for (const child of parent.children) {
+        if (child.className == "select-medicine-warning-label") {
+            warningLabel = child;
+        }
+    }
+    if (warningLabel != null) {
+        parent.removeChild(warningLabel);
+    }
 }
 
 document
@@ -54,6 +82,11 @@ function createPrescriptionFieldsDiv() {
     const medicineInputDiv = document.createElement("div");
     medicineInputDiv.id = "medicine_div";
     medicineInputDiv.style.display = "inline";
+
+    const medicineLabel = document.createElement("label");
+    medicineLabel.textContent = "Medicine";
+
+    medicineInputDiv.appendChild(medicineLabel);
 
     // Create the input for medicine_id that will mirror
     // the selected medicine from algolia's generated input
