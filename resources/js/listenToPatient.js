@@ -17,6 +17,9 @@ window.Echo.private(`CheckUp.Doctors.${doctorProfileId}`).listen(
         let mrn = document.getElementById("medical-record-number");
         mrn.textContent = e.patient.medical_record_number;
 
+        let formMrn = document.querySelector('form input[name="medical_record_number"]');
+        formMrn.value = e.patient.medical_record_number;
+
         let full_name = document.getElementById("full-name");
         full_name.textContent = e.patient.full_name;
 
@@ -44,7 +47,12 @@ window.Echo.private(`CheckUp.Doctors.${doctorProfileId}`).listen(
             "medical-records-tbody"
         );
         e.medicalRecords.forEach((medicalRecord) => {
+            // BUG: make the data stays when refreshing the page 
+
             let tr = document.createElement("tr");
+
+            medicalRecordsTableBody.textContent = '';
+            // TODO: doctor can't accept patient when still checking up a patient
 
             const doctorNameTd = document.createElement("td");
             doctorNameTd.className = "doctor-name";
