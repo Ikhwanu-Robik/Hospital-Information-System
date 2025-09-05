@@ -70,6 +70,7 @@ form label {
   color: #374151;
 }
 
+form textarea,
 form input[type="text"],
 form input[type="number"] {
   width: 100%;
@@ -81,7 +82,7 @@ form input[type="number"] {
   background-color: #fff;
 }
 
-form input:focus {
+form input:focus, form textarea:focus {
   outline: none;
   border-color: #2563eb;
   box-shadow: 0 0 0 2px rgba(37,99,235,0.2);
