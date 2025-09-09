@@ -18,6 +18,7 @@ class PatientWishToMeetDoctor implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
+    public $queueId;
     public DoctorProfile $doctorProfile;
     public Patient $patient;
     public array $medicalRecords;
@@ -25,8 +26,9 @@ class PatientWishToMeetDoctor implements ShouldBroadcast
     /**
      * Create a new event instance.
      */
-    public function __construct(DoctorProfile $doctorProfile, Patient $patient)
+    public function __construct(DoctorProfile $doctorProfile, Patient $patient, $queueId)
     {
+        $this->queueId = $queueId;
         $this->doctorProfile = $doctorProfile;
         $this->patient = $patient;
         $this->medicalRecords = MedicalRecord::with('prescriptionRecord.prescriptionMedicines.medicine', 'doctorProfile.specialization')

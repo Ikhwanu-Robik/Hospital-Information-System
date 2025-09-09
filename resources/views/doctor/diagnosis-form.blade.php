@@ -80,13 +80,15 @@
 
    <form action="{{ route('doctor.diagnosis') }}" method="post" id="medical_record_form">
       @csrf
+      <input type="hidden" name="doctor_profile_id" value="{{ Auth::user()->doctorProfile()->first()->id }}">
+      <input type="hidden" name="queue_id" value="">
       <input type="hidden" name="medical_record_number" value="">
       <label for="complaint">Complaint</label>
       <textarea name="complaint" id="complaint"></textarea>
       <label for="diagnosis">Diagnosis</label>
       <textarea name="diagnosis" id="diagnosis"></textarea>
       {{-- // TODO: move #add_prescription_button below #prescriptioin-field-container,
-               also needs to modify the js--}}
+      also needs to modify the js--}}
       {{-- //TODO: consider rearranging the medicine prescription layout into table --}}
       <button id="add_prescription_button">Add Prescription</button>
       <div id="prescription-fields-container">
