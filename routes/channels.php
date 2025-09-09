@@ -7,3 +7,7 @@ Broadcast::channel('CheckUp.Doctors.{doctorProfile}', function ($user, DoctorPro
     // TODO: see if I can check the patient's permission
     return $doctorProfile->user->can('accept patient');
 });
+
+Broadcast::channel('Locket.{locket}', function ($user, $locket) {
+    return true;
+});

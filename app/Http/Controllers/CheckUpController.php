@@ -2,26 +2,51 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Locket;
+use App\Models\Patient;
 use App\Models\Medicine;
-use App\Services\CheckUp;
+use App\Services\QueueApp;
+use App\Events\DoctorIsFree;
 use App\Models\CheckUpQueue;
 use Illuminate\Http\Request;
 use App\Models\DoctorProfile;
 use App\Models\MedicalRecord;
 use App\Models\Specialization;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 
 class CheckUpController extends Controller
 {
     public function diagnoseForm()
     {
+        if (!Auth::user()->can(['accept patient', 'prescribe medicine'])) {
+            abort(403);
+        }
+
         return view('doctor.diagnosis-form', ['medicines' => Medicine::all()->jsonSerialize()]);
         // used jsonSerialize so the data is correctly displayed in meta tag
     }
 
-    public function diagnosis() {
+    public function diagnosis(Request $request)
+    {
+        $validated = $request->validate([
+            'doctor_profile_id' => 'required|exists:doctor_profiles,id',
+            'queue_id' => 'required|exists:check_up_queues,id',
+            'medical_record_number' => 'required|exists:patients,medical_record_number',
+            // 'complaint' => 'required',
+            // 'diagnosis' => 'required',
+            'medicine_id[]' => 'sometimes|array', // TODO: complete the validation
+            'dose_amount[]' => 'sometimes|array',
+            'frequency[]' => 'sometimes|array'
+        ]);
+
+        CheckUpQueue::find($validated['queue_id'])->delete();
+        DoctorIsFree::dispatch(DoctorProfile::find($validated['doctor_profile_id']));
+
         // TODO: write doctor's diagnosis to database
         // TODO: print medicine prescription
+
+        return back();
     }
 
     public function queueForm()
@@ -29,28 +54,27 @@ class CheckUpController extends Controller
         return view("check-up-queue-form", ['specializations' => Specialization::all()]);
     }
 
-    public function joinQueue(Request $request, CheckUp $checkUp)
+    public function joinQueue(Request $request, QueueApp $queueApp)
     {
         $validated = $request->validate([
             'medical_record_number' => 'required|exists:patients,medical_record_number',
             'specialization' => 'required|exists:specializations,name',
         ]);
 
-        // $queueNumber = 
-        $checkUp->findDoctor($validated["specialization"])
-            ->queueCheckUp($validated['medical_record_number']);
+        $specialization = Specialization::where('name', $validated['specialization'])->first();
 
-        return view('check-up-queue-number', ['queue_number' => 0]); // TODO: ->with('queue_number', $queueNumber);
+        $patient = Patient::where('medical_record_number', $validated['medical_record_number'])->first();
 
-        // PLAN: redefine the course of actions upon submitting the request check up form
-        // Course of Actions
-        // 1. The submitted data got put inside a still queue
-        // 2. Check if the doctor is free AND online
-        // 3. If doctor is free AND online, execute the job (move the queue)
-        // 4. If doctor is not free AND online, listen for DoctorIsFree event
-        // 5. If doctor is *not* online, listen for DoctorIsOnline event
-        //
-        // DoctorIsFree event is dispatched when doctor dismiss a patient
+        $queueNumber = $queueApp->putInQueue($patient, $specialization);
+
+        return view('check-up-queue-number', ['queue_number' => $queueNumber]);
+    }
+
+    public function locketPage(Request $request)
+    {
+        $locket = Locket::find($request->query('id'));
+
+        return view('locket-page', ['locket' => $locket]);
     }
 
     public function getOldestPatient(Request $request, DoctorProfile $doctorProfile)
