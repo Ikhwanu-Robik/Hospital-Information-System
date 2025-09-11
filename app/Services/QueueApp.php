@@ -6,6 +6,7 @@ use App\Models\Locket;
 use App\Events\DoctorIsFree;
 use App\Models\CheckUpQueue;
 use App\Models\DoctorProfile;
+use Illuminate\Support\Facades\DB;
 
 class QueueApp
 {
@@ -77,6 +78,9 @@ class QueueApp
         }
 
         $isDoctorBusy = CheckUpQueue::where('doctor_profile_id', $this->doctor->id)->exists();
+        $isDoctorOnline = DB::table('user_sessions')
+            ->where('user_id', $this->doctor->user->id)
+            ->exists();
 
         $checkUpQueue = CheckUpQueue::create([
             'patient_id' => $patient->id,
@@ -85,8 +89,8 @@ class QueueApp
             'locket_id' => $this->locket->id
         ]);
 
-        if (!$isDoctorBusy) {
-            DoctorIsFree::dispatch($doctor);
+        if (!$isDoctorBusy && $isDoctorOnline) {
+            DoctorIsFree::dispatch($this->doctor);
         }
 
         return $checkUpQueue->number . $this->locket->code;
