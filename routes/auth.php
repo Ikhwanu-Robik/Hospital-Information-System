@@ -17,3 +17,8 @@ Route::post('/login', function (Request $request) {
         return redirect()->intended();
     }
 })->name('login.action');
+
+Route::get('/logout', function () {
+    Auth::logout();
+    return redirect()->route('login');
+})->name('logout');

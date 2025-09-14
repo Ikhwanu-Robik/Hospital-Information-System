@@ -11,7 +11,10 @@
 </head>
 
 <body>
-   <h1>Diagnose A Patient</h1>
+   <div class="flex space-between">
+      <h1>Diagnose A Patient</h1>
+      <a href="{{ route('logout') }}" class="btn btn-secondary">Logout</a>
+   </div>
 
    <div class="card" id="patient-data">
       <div class="card-header">
