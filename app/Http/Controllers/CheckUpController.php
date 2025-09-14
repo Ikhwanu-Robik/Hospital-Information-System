@@ -50,6 +50,18 @@ class CheckUpController extends Controller
         return back();
     }
 
+    public function skipPatient(Request $request) {
+        $validated = $request->validate([
+            'doctor_profile_id' => 'required|exists:doctor_profiles,id',
+            'queue_id_skip' => 'required|exists:check_up_queues,id',
+        ]);
+
+        CheckUpQueue::find($validated['queue_id_skip'])->delete();
+        DoctorIsFree::dispatch(DoctorProfile::find($validated['doctor_profile_id']));
+
+        return back();
+    }
+
     public function queueForm()
     {
         return view("check-up-queue-form", ['specializations' => Specialization::all()]);

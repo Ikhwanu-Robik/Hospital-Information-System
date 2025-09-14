@@ -61,6 +61,9 @@ function fillPatientData(queueId, patient, medicalRecords) {
     let queueIdInput = document.querySelector('input[name="queue_id"]');
     queueIdInput.value = queueId;
 
+    let queueIdSkipInput = document.querySelector('input[name="queue_id_skip"]');
+    queueIdSkipInput.value = queueId;
+
     let mrn = document.getElementById("medical-record-number");
     mrn.textContent = patient.medical_record_number;
 

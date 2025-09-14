@@ -96,6 +96,13 @@
       </div>
       <button type="submit">Save</button>
    </form>
+   <form action="{{ route('patient.check-up.skip') }}" method="post">
+      @csrf
+      <input type="hidden" name="doctor_profile_id" value="{{ Auth::user()->doctorProfile()->first()->id }}">
+      <input type="hidden" name="queue_id_skip" value="">
+      <label for="">If patient didn't come</label>
+      <button type="submit">Skip</button>
+   </form>
 </body>
 
 </html>
