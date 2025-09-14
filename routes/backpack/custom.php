@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\SellMedicineController;
+use App\Http\Controllers\CheckUpController;
 use Illuminate\Support\Facades\Route;
 
 // --------------------------
@@ -23,6 +24,9 @@ Route::group([
         Route::get('/search-medicine', [SellMedicineController::class, 'searchMedicines'])->name('search-medicine');
         Route::post('/buy', [SellMedicineController::class, 'buyMedicines'])->name('buy-medicines');
     });
+
+    Route::get('/queue/printer', [CheckUpController::class, 'setPrinterForm'])->name('queue.printer.form');
+    Route::post('/queue/printer', [CheckUpController::class, 'setQueueNumberDefaultPrinter'])->name('queue.printer.set');
 
     Route::crud('doctor-profile', 'DoctorProfileCrudController');
     Route::crud('drug-class', 'DrugClassCrudController');

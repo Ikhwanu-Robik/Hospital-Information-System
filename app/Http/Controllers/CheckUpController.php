@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Locket;
 use App\Models\Patient;
 use App\Models\Medicine;
+use App\Models\Setting;
 use App\Services\QueueApp;
 use App\Events\DoctorIsFree;
 use App\Models\CheckUpQueue;
@@ -67,7 +68,10 @@ class CheckUpController extends Controller
 
         $queueNumber = $queueApp->putInQueue($patient, $specialization);
 
-        return view('check-up-queue-number', ['queue_number' => $queueNumber]);
+        $printer = Setting::where('key', 'queue-app-default-printer')->first();
+        $printerName = $printer ? $printer->value : null;
+
+        return view('check-up-queue-number', ['queueNumber' => $queueNumber, 'printerName' => $printerName]);
     }
 
     public function locketPage(Request $request)
@@ -98,5 +102,32 @@ class CheckUpController extends Controller
         return response([
             'message' => 'No patient'
         ], 404);
+    }
+
+    public function setPrinterForm()
+    {
+        if (!backpack_user()->hasRole('super admin')) {
+            return abort(403);
+        }
+
+        $printer = Setting::where('key', 'queue-app-default-printer')->first();
+        $printerName = $printer ? $printer->value : null;
+        return view('admin.set-queue-app-printer', ['currentPrinter' => $printerName]);
+    }
+
+    public function setQueueNumberDefaultPrinter(Request $request)
+    {
+        // would love to validate, but don't know how
+        $validated = $request->validate([
+            'printer' => 'required'
+        ]);
+        if (Setting::where('key', 'queue-app-default-printer')->exists()) {
+            $queueAppDefaultPrinter = Setting::where('key', 'queue-app-default-printer')->first();
+            $queueAppDefaultPrinter->value = $validated['printer'];
+            $queueAppDefaultPrinter->save();
+        } else {
+            Setting::create(['key' => 'queue-app-default-printer', 'value' => $validated['printer']]);
+        }
+        return view('admin.queue-app-printer-setted', ['printer' => $validated['printer']]);
     }
 }

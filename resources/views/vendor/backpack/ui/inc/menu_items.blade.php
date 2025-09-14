@@ -32,6 +32,8 @@
     <x-backpack::menu-item title="Users" icon="la la-question" :link="backpack_url('user')" />
     <x-backpack::menu-item title="Roles" icon="la la-question" :link="backpack_url('role')" />
     <x-backpack::menu-item title="Permissions" icon="la la-question" :link="backpack_url('permission')" />
+    <li class="nav-item"><a class="nav-link" href="{{ route('queue.printer.form') }}"><i class="la la-question nav-icon"></i>
+            Queue Number Printer</a></li>
 @elseif (backpack_user()->hasRole('pharmacist'))
     <x-backpack::menu-item title="Drug classes" icon="la la-question" :link="backpack_url('drug-class')" />
     <x-backpack::menu-item title="Medicines" icon="la la-question" :link="backpack_url('medicine')" />

@@ -19,6 +19,7 @@
     "dependencies": {
         "@algolia/autocomplete-js": "^1.19.2",
         "@algolia/autocomplete-theme-classic": "^1.19.2",
+        "qz-tray": "^2.2.5",
         "sweetalert2": "^11.22.5",
         "talkify-tts": "^4.0.0"
     }
