@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\PaymentStatus;
 use App\Models\Locket;
 use App\Models\Patient;
 use App\Models\Medicine;
@@ -34,23 +35,42 @@ class CheckUpController extends Controller
             'doctor_profile_id' => 'required|exists:doctor_profiles,id',
             'queue_id' => 'required|exists:check_up_queues,id',
             'medical_record_number' => 'required|exists:patients,medical_record_number',
-            // 'complaint' => 'required',
-            // 'diagnosis' => 'required',
-            'medicine_id[]' => 'sometimes|array', // TODO: complete the validation
-            'dose_amount[]' => 'sometimes|array',
-            'frequency[]' => 'sometimes|array'
+            'complaint' => 'required',
+            'diagnosis' => 'required',
+            'medicine_id' => 'sometimes|array', // TODO: complete the validation
+            'dose_amount' => 'sometimes|array',
+            'frequency' => 'sometimes|array',
+            'medicine_id.*' => 'exists:medicines,id'
         ]);
+
+        $patient = Patient::where('medical_record_number', $validated['medical_record_number'])->first();
+        $MedicalRecord = MedicalRecord::create([
+            'patient_id' => $patient->id,
+            'doctor_profile_id' => $validated['doctor_profile_id'],
+            'complaint' => $validated['complaint'],
+            'diagnosis' => $validated['diagnosis']
+        ]);
+        $prescriptionRecord = $MedicalRecord->prescriptionRecord()->create([
+            'payment_status' => PaymentStatus::PENDING->value
+        ]);
+        for ($i = 0; $i < count($validated['medicine_id']); $i++) {
+            $prescriptionRecord->prescriptionMedicines()->create([
+                'medicine_id' => $validated['medicine_id'][$i],
+                'dose_amount' => $validated['dose_amount'][$i],
+                'frequency' => $validated['frequency'][$i]
+            ]);
+        }
 
         CheckUpQueue::find($validated['queue_id'])->delete();
         DoctorIsFree::dispatch(DoctorProfile::find($validated['doctor_profile_id']));
 
-        // TODO: write doctor's diagnosis to database
         // TODO: print medicine prescription
 
         return back();
     }
 
-    public function skipPatient(Request $request) {
+    public function skipPatient(Request $request)
+    {
         $validated = $request->validate([
             'doctor_profile_id' => 'required|exists:doctor_profiles,id',
             'queue_id_skip' => 'required|exists:check_up_queues,id',
