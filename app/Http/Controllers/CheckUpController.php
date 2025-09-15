@@ -50,23 +50,44 @@ class CheckUpController extends Controller
             'complaint' => $validated['complaint'],
             'diagnosis' => $validated['diagnosis']
         ]);
-        $prescriptionRecord = $MedicalRecord->prescriptionRecord()->create([
-            'payment_status' => PaymentStatus::PENDING->value
-        ]);
-        for ($i = 0; $i < count($validated['medicine_id']); $i++) {
-            $prescriptionRecord->prescriptionMedicines()->create([
-                'medicine_id' => $validated['medicine_id'][$i],
-                'dose_amount' => $validated['dose_amount'][$i],
-                'frequency' => $validated['frequency'][$i]
+        if (isset($validated['medicine_id'])) {
+            // TODO: set status to FINISHED if patient has BPJS
+            $prescriptionRecord = $MedicalRecord->prescriptionRecord()->create([
+                'payment_status' => PaymentStatus::PENDING->value
             ]);
+            for ($i = 0; $i < count($validated['medicine_id']); $i++) {
+                $prescriptionRecord->prescriptionMedicines()->create([
+                    'medicine_id' => $validated['medicine_id'][$i],
+                    'dose_amount' => $validated['dose_amount'][$i],
+                    'frequency' => $validated['frequency'][$i]
+                ]);
+            }
         }
 
         CheckUpQueue::find($validated['queue_id'])->delete();
         DoctorIsFree::dispatch(DoctorProfile::find($validated['doctor_profile_id']));
 
-        // TODO: print medicine prescription
+        if (isset($validated['medicine_id'])) {
+            return redirect()
+                ->route('medicine-prescription.print')
+                ->with(
+                    'prescriptions',
+                    $prescriptionRecord
+                        ->prescriptionMedicines()
+                        ->with('medicine')
+                        ->get()
+                );
+        } else {
+            return back();
+        }
+    }
 
-        return back();
+    public function printPrescriptionPage()
+    {
+        $printer = Setting::where('key', 'queue-app-default-printer')->first();
+        $printerName = $printer ? $printer->value : null;
+
+        return view('doctor.print-medicine-prescriptions', ['printerName' => $printerName]);
     }
 
     public function skipPatient(Request $request)

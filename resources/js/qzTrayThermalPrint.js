@@ -11,9 +11,25 @@ document.addEventListener("DOMContentLoaded", async () => {
             'meta[name="queue-number"]'
         ).content;
         await printQueueNumber(queueNumber);
+    } else if (pageName == "print-medicine-prescription") {
+        let prescriptions = JSON.parse(
+            document.querySelector('meta[name="prescriptions"]').content
+        );
+        await printMedicinePrescriptions(prescriptions);
     }
     await closeConnection();
 });
+
+document
+    .querySelector("button#printButton")
+    .addEventListener("click", async () => {
+        await startConnection();
+        let prescriptions = JSON.parse(
+            document.querySelector('meta[name="prescriptions"]').content
+        );
+        await printMedicinePrescriptions(prescriptions);
+        await closeConnection();
+    });
 
 async function startConnection() {
     try {
@@ -58,7 +74,7 @@ function getQueueAppPrinter() {
 async function printQueueNumber(queueNumber) {
     try {
         let printerName = getQueueAppPrinter();
-        if (printerName != '') {
+        if (printerName != "") {
             let config = qz.configs.create(printerName);
             let data = [
                 "\x1B" + "\x40", // init
@@ -71,13 +87,44 @@ async function printQueueNumber(queueNumber) {
                 "\x0A", // line break
                 "\x1B" + "\x69", // cut paper (old syntax)
             ];
-    
+
             await qz.print(config, data);
         } else {
             Swal.fire({
                 title: "Can't Print Queue Number",
                 icon: "error",
-                text: "please contact the hospital officer"
+                text: "please contact the hospital officer",
+            });
+        }
+    } catch (e) {
+        console.error(e);
+    }
+}
+
+async function printMedicinePrescriptions(prescriptions) {
+    try {
+        let printerName = getQueueAppPrinter();
+        if (printerName != "") {
+            let config = qz.configs.create(printerName);
+            let data = [
+                "\x1B" + "\x40", // init
+            ];
+            prescriptions.forEach((prescription) => {
+                let medicineName = prescription.medicine.name;
+                let quantity = prescription.dose_amount;
+                let frequency = prescription.frequency;
+
+                data.push(medicineName + " x " + quantity + " | " + frequency);
+                data.push("\x0A"); // line break
+            });
+            data.push("\x1B" + "\x69"); // cut paper (old syntax)
+
+            await qz.print(config, data);
+        } else {
+            Swal.fire({
+                title: "Can't Print Queue Number",
+                icon: "error",
+                text: "please contact the hospital officer",
             });
         }
     } catch (e) {
