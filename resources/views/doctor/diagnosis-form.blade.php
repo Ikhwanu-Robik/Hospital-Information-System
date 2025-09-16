@@ -109,6 +109,11 @@
       <label for="">If patient didn't come</label>
       <button type="submit">Skip</button>
    </form>
+   <form action="{{ route('patient.check-up.call') }}" method="post">
+      @csrf
+      <input type="hidden" name="doctor_profile_id" value="{{ Auth::user()->doctorProfile()->first()->id }}">
+      <button type="submit">Call Again</button>
+   </form>
 </body>
 
 </html>

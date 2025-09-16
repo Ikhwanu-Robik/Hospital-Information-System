@@ -126,6 +126,19 @@ class CheckUpController extends Controller
         return view('doctor.print-medicine-prescriptions', ['printerName' => $printerName]);
     }
 
+    public function callPatient(Request $request)
+    {
+        $validated = $request->validate([
+            'doctor_profile_id' => 'required|exists:doctor_profiles,id'
+        ]);
+
+        // we can simply dispatch this event without passing the patient to be called
+        // because the patient is certainly the patient that has waited the longest
+        DoctorIsFree::dispatch(DoctorProfile::find($validated['doctor_profile_id']));
+
+        return back();
+    }
+
     public function skipPatient(Request $request)
     {
         $validated = $request->validate([
