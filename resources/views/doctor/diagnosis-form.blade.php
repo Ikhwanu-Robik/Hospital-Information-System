@@ -1,13 +1,16 @@
 <html>
 
 <head>
+   <meta name="csrf-token" content="{{ csrf_token() }}">
    <meta name="doctor-profile-id" content="{{ Auth::user()->doctorProfile()->first()->id }}">
+   <meta name="doctor-ping-interval" content="{{ $doctorPingInterval }}">
    <meta name="medicines" content="{{ json_encode($medicines) }}">
    @vite('resources/js/listenToPatient.js')
    @vite('resources/css/autocomplete-custom.css')
    @vite('resources/js/useAutoComplete.js')
    @vite('resources/css/diagnosis-form.css')
    @vite('resources/js/validateMedicineForm.js')
+   @vite('resources/js/doctorPing.js')
 </head>
 
 <body>

@@ -19,13 +19,20 @@ use Illuminate\Support\Facades\Auth;
 
 class CheckUpController extends Controller
 {
+    public function doctorPing(DoctorProfile $doctorProfile) {
+        $doctorProfile->doctorOnlineStatus->last_seen_at = now();
+        $doctorProfile->doctorOnlineStatus->save();
+    }
+
     public function diagnoseForm()
     {
         if (!Auth::user()->can(['accept patient', 'prescribe medicine'])) {
             abort(403);
         }
+        $doctorPingInterval = Setting::where('key', 'doctor-ping-interval')->first('value');
+        $doctorPingInterval = $doctorPingInterval->value;
 
-        return view('doctor.diagnosis-form', ['medicines' => Medicine::all()->jsonSerialize()]);
+        return view('doctor.diagnosis-form', ['doctorPingInterval' => $doctorPingInterval, 'medicines' => Medicine::all()->jsonSerialize()]);
         // used jsonSerialize so the data is correctly displayed in meta tag
     }
 

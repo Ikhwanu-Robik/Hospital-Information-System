@@ -5,6 +5,8 @@ use App\Http\Controllers\CheckUpController;
 
 require('auth.php');
 
+Route::post('/doctors/{doctorProfile}/ping', [CheckUpController::class, 'doctorPing'])->middleware('auth');
+
 Route::get('/diagnose', [CheckUpController::class, 'diagnoseForm'])->middleware('auth')->name('doctor.diagnosis-form');
 
 Route::post('/diagnosis', [CheckUpController::class, 'diagnosis'])->middleware('auth')->name('doctor.diagnosis');

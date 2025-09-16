@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Models\User;
 use App\Models\DoctorSchedule;
 use App\Models\Specialization;
+use App\Models\DoctorOnlineStatus;
 use Illuminate\Database\Eloquent\Model;
 use Backpack\CRUD\app\Models\Traits\CrudTrait;
 
@@ -35,5 +36,10 @@ class DoctorProfile extends Model
     public function schedules()
     {
         return $this->hasMany(DoctorSchedule::class);
+    }
+
+    public function doctorOnlineStatus()
+    {
+        return $this->hasOne(DoctorOnlineStatus::class);
     }
 }
