@@ -45,6 +45,12 @@
         </a>
     </li>
 
+    <li class="nav-item">
+        <a class="nav-link" href="{{ route('doctors.ping-interval-form') }}">
+            <i class="la la-clock nav-icon"></i> Doctor Ping Interval
+        </a>
+    </li>
+
 @elseif (backpack_user()->hasRole('pharmacist'))
     <x-backpack::menu-item title="Drug classes" icon="la la-sitemap" :link="backpack_url('drug-class')" />
     <x-backpack::menu-item title="Medicines" icon="la la-pills" :link="backpack_url('medicine')" />

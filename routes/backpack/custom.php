@@ -28,6 +28,9 @@ Route::group([
     Route::get('/queue/printer', [CheckUpController::class, 'setPrinterForm'])->name('queue.printer.form');
     Route::post('/queue/printer', [CheckUpController::class, 'setQueueNumberDefaultPrinter'])->name('queue.printer.set');
 
+    Route::get('/doctors/ping-interval', [CheckUpController::class, 'setDoctorPingIntervalForm'])->name('doctors.ping-interval-form');
+    Route::post('/doctors/ping-interval', [CheckUpController::class, 'setDoctorPingInterval'])->name('doctors.ping-interval');
+
     Route::crud('doctor-profile', 'DoctorProfileCrudController');
     Route::crud('drug-class', 'DrugClassCrudController');
     Route::crud('medical-record', 'MedicalRecordCrudController');

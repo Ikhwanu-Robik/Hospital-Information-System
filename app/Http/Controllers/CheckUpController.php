@@ -19,7 +19,36 @@ use Illuminate\Support\Facades\Auth;
 
 class CheckUpController extends Controller
 {
-    public function doctorPing(DoctorProfile $doctorProfile) {
+    public function setDoctorPingIntervalForm()
+    {
+        $currentInterval = Setting::where('key', 'doctor-ping-interval')->first();
+        $currentInterval = $currentInterval ? $currentInterval->value : null;
+        
+        return view('admin.set-doctor-ping-interval', ['currentInterval' => $currentInterval]);
+    }
+
+    public function setDoctorPingInterval(Request $request)
+    {
+        $validated = $request->validate([
+            'ping_interval' => 'required|numeric'
+        ]);
+
+        $doctorPingInterval = Setting::where('key', 'doctor-ping-interval')->first();
+        if ($doctorPingInterval) {
+            $doctorPingInterval->value = $validated['ping_interval'];
+            $doctorPingInterval->save();    
+        } else {
+            Setting::create([
+                'doctor-ping-interval',
+                $validated['ping_interval']
+            ]);
+        }
+
+        return back();
+    }
+
+    public function doctorPing(DoctorProfile $doctorProfile)
+    {
         $doctorProfile->doctorOnlineStatus->last_seen_at = now();
         $doctorProfile->doctorOnlineStatus->save();
     }
