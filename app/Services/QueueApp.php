@@ -3,10 +3,11 @@
 namespace App\Services;
 
 use App\Models\Locket;
+use App\Models\Setting;
 use App\Events\DoctorIsFree;
 use App\Models\CheckUpQueue;
 use App\Models\DoctorProfile;
-use Illuminate\Support\Facades\DB;
+use App\Models\DoctorOnlineStatus;
 
 class QueueApp
 {
@@ -78,9 +79,13 @@ class QueueApp
         }
 
         $isDoctorBusy = CheckUpQueue::where('doctor_profile_id', $this->doctor->id)->exists();
-        $isDoctorOnline = DB::table('user_sessions')
-            ->where('user_id', $this->doctor->user->id)
-            ->exists();
+
+        $doctorPingInterval = Setting::where('key', 'doctor-ping-interval')->first();
+        if ($doctorPingInterval) {
+            $isDoctorOnline = DoctorOnlineStatus::where('doctor_profile_id', $this->doctor->id)
+                ->where('last_seen_at', now()->addMilliseconds($doctorPingInterval->value * 2))
+                ->exists();
+        }
 
         $checkUpQueue = CheckUpQueue::create([
             'patient_id' => $patient->id,
