@@ -1,10 +1,6 @@
 import "./app";
 import Swal from "sweetalert2";
 
-document.addEventListener("DOMContentLoaded", () => {
-    fetchPatientData();
-});
-
 let doctorProfileId = document.querySelector(
     'meta[name="doctor-profile-id"]'
 ).content;
@@ -20,41 +16,6 @@ window.Echo.private(`CheckUp.Doctors.${doctorProfileId}`).listen(
         fillPatientData(e.queueId, e.patient, e.medicalRecords);
     }
 );
-
-async function fetchPatientData() {
-    Swal.fire({
-        title: "Fetching...",
-    });
-
-    const response = await fetch(
-        `http://127.0.0.1:8000/api/doctors/${doctorProfileId}/patients/earliest`
-    );
-
-    if (!response.ok && response.status != 404) {
-        Swal.fire({
-            title: `Error Fetching Data`,
-            text: response.statusText,
-            icon: "error",
-        });
-    }
-    else if (!response.ok && response.status == 404) {
-        let json = await response.json();
-
-        Swal.fire({
-            title: `Error Fetching Data`,
-            text: json.message,
-            icon: "error",
-        });
-    } else {
-        Swal.fire({
-            title: "Patient Fetched",
-            icon: "success",
-        });
-
-        const result = await response.json();
-        fillPatientData(result.queueId, result.patient, result.medicalRecords);
-    }
-}
 
 function fillPatientData(queueId, patient, medicalRecords) {
     // fill the patient's data

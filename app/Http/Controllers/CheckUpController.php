@@ -170,29 +170,6 @@ class CheckUpController extends Controller
         return view('locket-page', ['locket' => $locket]);
     }
 
-    public function getOldestPatient(Request $request, DoctorProfile $doctorProfile)
-    {
-        //TODO: add some security to this, preferably with CSRF token
-        $earliestQueue = CheckUpQueue::where('doctor_profile_id', $doctorProfile->id)
-            ->with('patient')->oldest()->first();
-        if ($earliestQueue) {
-            $patient = $earliestQueue->patient;
-            $medicalRecords = MedicalRecord::with('prescriptionRecord.prescriptionMedicines.medicine', 'doctorProfile.specialization')
-                ->where('patient_id', $patient->id)
-                ->get()->toArray();
-
-            return [
-                'queueId' => $earliestQueue->id,
-                'patient' => $patient,
-                'medicalRecords' => $medicalRecords
-            ];
-        }
-
-        return response([
-            'message' => 'No patient'
-        ], 404);
-    }
-
     public function setPrinterForm()
     {
         if (!backpack_user()->hasRole('super admin')) {
