@@ -7,22 +7,60 @@ let doctorProfileId = document.querySelector(
 
 window.Echo.private(`CheckUp.Doctors.${doctorProfileId}`).listen(
     "PatientWishToMeetDoctor",
-    (e) => {
+    async (e) => {
         Swal.fire({
             title: "Patient Coming",
             icon: "info",
         });
 
-        fillPatientData(e.queueId, e.patient, e.medicalRecords);
+        let medicalRecords = await fetchMedicalRecords(e.patient);
+
+        fillPatientData(e.queueId, e.patient, medicalRecords);
     }
 );
+
+async function fetchMedicalRecords(patient) {
+    try {
+        let response = await fetch(
+            `http://127.0.0.1:8000/diagnosis/patient/${patient.id}/medical-records`,
+            {
+                method: "GET",
+                headers: {
+                    "X-Requested-With": "XMLHttpRequest",
+                    "X-CSRF-TOKEN": document.querySelector(
+                        'meta[name="csrf-token"]'
+                    ).content,
+                },
+                credentials: "same-origin",
+            }
+        );
+
+        if (!response.ok) {
+            Swal.fire({
+                title: "Can't Get Medical Records",
+                icon: "error",
+                text: response.statusText,
+            });
+        } else if (response.ok) {
+            return await response.json();
+        }
+    } catch (e) {
+        Swal.fire({
+            title: "Can't Get Medical Records",
+            icon: "error",
+            text: e,
+        });
+    }
+}
 
 function fillPatientData(queueId, patient, medicalRecords) {
     // fill the patient's data
     let queueIdInput = document.querySelector('input[name="queue_id"]');
     queueIdInput.value = queueId;
 
-    let queueIdSkipInput = document.querySelector('input[name="queue_id_skip"]');
+    let queueIdSkipInput = document.querySelector(
+        'input[name="queue_id_skip"]'
+    );
     queueIdSkipInput.value = queueId;
 
     let mrn = document.getElementById("medical-record-number");

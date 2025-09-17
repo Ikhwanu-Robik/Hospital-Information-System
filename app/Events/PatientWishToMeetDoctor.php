@@ -21,7 +21,6 @@ class PatientWishToMeetDoctor implements ShouldBroadcast
     public $queueId;
     public DoctorProfile $doctorProfile;
     public Patient $patient;
-    public array $medicalRecords;
 
     /**
      * Create a new event instance.
@@ -31,10 +30,6 @@ class PatientWishToMeetDoctor implements ShouldBroadcast
         $this->queueId = $queueId;
         $this->doctorProfile = $doctorProfile;
         $this->patient = $patient;
-        $this->medicalRecords = MedicalRecord::with('prescriptionRecord.prescriptionMedicines.medicine', 'doctorProfile.specialization')
-            ->where('patient_id', $patient->id)
-            ->get()->toArray();
-        // the eager loaded relationships will be missing without toArray()
     }
 
     /**

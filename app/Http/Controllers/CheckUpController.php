@@ -23,7 +23,7 @@ class CheckUpController extends Controller
     {
         $currentInterval = Setting::where('key', 'doctor-ping-interval')->first();
         $currentInterval = $currentInterval ? $currentInterval->value : null;
-        
+
         return view('admin.set-doctor-ping-interval', ['currentInterval' => $currentInterval]);
     }
 
@@ -36,7 +36,7 @@ class CheckUpController extends Controller
         $doctorPingInterval = Setting::where('key', 'doctor-ping-interval')->first();
         if ($doctorPingInterval) {
             $doctorPingInterval->value = $validated['ping_interval'];
-            $doctorPingInterval->save();    
+            $doctorPingInterval->save();
         } else {
             Setting::create([
                 'doctor-ping-interval',
@@ -118,6 +118,14 @@ class CheckUpController extends Controller
         }
     }
 
+    public function getPatientMedicalRecords(Patient $patient)
+    {
+        return MedicalRecord::with('prescriptionRecord.prescriptionMedicines.medicine', 'doctorProfile.specialization')
+            ->where('patient_id', $patient->id)
+            ->get()->toArray();
+        // the eager loaded relationships will be missing without toArray()
+    }
+
     public function printPrescriptionPage()
     {
         $printer = Setting::where('key', 'queue-app-default-printer')->first();
@@ -196,6 +204,7 @@ class CheckUpController extends Controller
 
     public function setQueueNumberDefaultPrinter(Request $request)
     {
+        // TODO: validate the printer's name
         // would love to validate, but don't know how
         $validated = $request->validate([
             'printer' => 'required'
