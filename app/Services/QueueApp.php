@@ -83,7 +83,7 @@ class QueueApp
         $doctorPingInterval = Setting::where('key', 'doctor-ping-interval')->first();
         if ($doctorPingInterval) {
             $isDoctorOnline = DoctorOnlineStatus::where('doctor_profile_id', $this->doctor->id)
-                ->where('last_seen_at', now()->addMilliseconds($doctorPingInterval->value * 2))
+                ->where('last_seen_at', '<', now()->addMilliseconds($doctorPingInterval->value * 2))
                 ->exists();
         }
 
