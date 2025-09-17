@@ -59,11 +59,9 @@ function fillPatientData(queueId, patient, medicalRecords) {
     let medicalRecordsTableBody = document.getElementById(
         "medical-records-tbody"
     );
+    medicalRecordsTableBody.textContent = "";
     medicalRecords.forEach((medicalRecord) => {
         let tr = document.createElement("tr");
-
-        medicalRecordsTableBody.textContent = "";
-        // TODO: doctor can't accept patient when still checking up a patient
 
         const doctorNameTd = document.createElement("td");
         doctorNameTd.className = "doctor-name";
