@@ -13,7 +13,8 @@ class CheckUpQueue extends Model
         'patient_id',
         'doctor_profile_id',
         'number',
-        'locket_id'
+        'locket_id',
+        'status'
     ];
 
     public function patient()

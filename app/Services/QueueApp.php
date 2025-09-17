@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Locket;
 use App\Models\Setting;
+use App\Enums\CheckUpStatus;
 use App\Events\DoctorIsFree;
 use App\Models\CheckUpQueue;
 use App\Models\DoctorProfile;
@@ -54,6 +55,7 @@ class QueueApp
 
             // find number of queues owned by each doctor that have queue
             $queueDoctors = CheckUpQueue::selectRaw('doctor_profile_id, COUNT(doctor_profile_id) AS queues_count')
+                ->where('status', CheckUpStatus::WAITING->value)
                 ->whereHas('doctorProfile.specialization', function ($query) {
                     $query->where('id', $this->specialization->id);
                 })
@@ -78,7 +80,9 @@ class QueueApp
                 ->get()->random();
         }
 
-        $isDoctorBusy = CheckUpQueue::where('doctor_profile_id', $this->doctor->id)->exists();
+        $isDoctorBusy = CheckUpQueue::where('doctor_profile_id', $this->doctor->id)
+            ->where('status', CheckUpStatus::WAITING->value)
+            ->exists();
 
         $doctorPingInterval = Setting::where('key', 'doctor-ping-interval')->first();
         if ($doctorPingInterval) {
@@ -91,7 +95,8 @@ class QueueApp
             'patient_id' => $patient->id,
             'doctor_profile_id' => $this->doctor->id,
             'number' => $this->previousQueue ? ++$this->previousQueue->number : 1,
-            'locket_id' => $this->locket->id
+            'locket_id' => $this->locket->id,
+            'status' => CheckUpStatus::WAITING->value
         ]);
 
         if (!$isDoctorBusy && $isDoctorOnline) {

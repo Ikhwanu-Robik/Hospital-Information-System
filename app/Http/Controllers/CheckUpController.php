@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\CheckUpStatus;
 use App\Enums\PaymentStatus;
 use App\Models\Locket;
 use App\Models\Patient;
@@ -100,7 +101,9 @@ class CheckUpController extends Controller
             }
         }
 
-        CheckUpQueue::find($validated['queue_id'])->delete();
+        $checkUpQueue = CheckUpQueue::find($validated['queue_id']);
+        $checkUpQueue->status = CheckUpStatus::FINISHED->value;
+        $checkUpQueue->save();
         DoctorIsFree::dispatch(DoctorProfile::find($validated['doctor_profile_id']));
 
         if (isset($validated['medicine_id'])) {
@@ -154,7 +157,9 @@ class CheckUpController extends Controller
             'queue_id_skip' => 'required|exists:check_up_queues,id',
         ]);
 
-        CheckUpQueue::find($validated['queue_id_skip'])->delete();
+        $checkUpQueue = CheckUpQueue::find($validated['queue_id_skip']);
+        $checkUpQueue->status = CheckUpStatus::SKIPPED->value;
+        $checkUpQueue->save();
         DoctorIsFree::dispatch(DoctorProfile::find($validated['doctor_profile_id']));
 
         return back();

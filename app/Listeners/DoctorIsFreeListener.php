@@ -2,10 +2,11 @@
 
 namespace App\Listeners;
 
+use App\Enums\CheckUpStatus;
 use App\Events\DoctorIsFree;
-use App\Events\PatientWishToMeetDoctor;
 use App\Models\CheckUpQueue;
 use App\Events\QueueReadyForBroadcast;
+use App\Events\PatientWishToMeetDoctor;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
@@ -24,7 +25,8 @@ class DoctorIsFreeListener
      */
     public function handle(DoctorIsFree $event): void
     {
-        $oldestQueue = CheckUpQueue::oldest('created_at')
+        $oldestQueue = CheckUpQueue::where('status', CheckUpStatus::WAITING->value)
+            ->oldest('created_at')
             ->with(['doctorProfile', 'patient'])
             ->where('doctor_profile_id', $event->doctorProfile->id)
             ->first();
