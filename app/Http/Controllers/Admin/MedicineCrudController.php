@@ -79,11 +79,18 @@ class MedicineCrudController extends CrudController
         CRUD::column('batch_number');
         CRUD::column('expiry_date');
         CRUD::column('manufacturer');
+        CRUD::column('created_at');
+        CRUD::column('updated_at');
 
         /**
          * Columns can be defined using the fluent syntax:
          * - CRUD::column('price')->type('number');
          */
+    }
+
+    protected function setupShowOperation()
+    {
+        $this->setupListOperation();
     }
 
     /**
@@ -115,6 +122,8 @@ class MedicineCrudController extends CrudController
             'model' => 'App\Models\MedicineRoute',
             'attribute' => 'name'
         ]);
+
+        CRUD::removeFields(['stripe_product_id', 'stripe_price_id']);
 
         /**
          * Fields can be defined using the fluent syntax:

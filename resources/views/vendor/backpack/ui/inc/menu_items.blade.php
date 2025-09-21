@@ -61,7 +61,6 @@
             <i class="la la-cash-register nav-icon"></i> Dispense Medicines
         </a>
     </li>
-    <x-backpack::menu-item title="Sell Medicines" icon="la la-shopping-cart" :link="route('medicine.sell')" />
 
 @elseif (backpack_user()->hasRole('administration officer'))
     <x-backpack::menu-item title="Patients" icon="la la-procedures" :link="backpack_url('patient')" />

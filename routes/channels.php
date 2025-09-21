@@ -16,3 +16,7 @@ Broadcast::channel('CheckUp.Doctors.{doctorProfile}', function ($user, DoctorPro
 Broadcast::channel('Locket.{locket}', function ($user, $locket) {
     return true;
 });
+
+Broadcast::channel('Medicine.Dispense.{prescriptionRecordId}', function () {
+    return true;
+});

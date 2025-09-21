@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Rules\PrescriptionIsNotPaid;
 use Illuminate\Foundation\Http\FormRequest;
 
 class BuyMedicineRequest extends FormRequest
@@ -22,7 +23,10 @@ class BuyMedicineRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'id' => 'exists:medical_records,id'
+            'id' => [
+                'exists:prescription_records,id',
+                new PrescriptionIsNotPaid
+            ]
         ];
     }
 }

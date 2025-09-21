@@ -23,6 +23,8 @@ Route::group([
         Route::get('/', [SellMedicineController::class, 'index'])->name('sell-medicine');
         Route::get('/search-medicine', [SellMedicineController::class, 'searchMedicines'])->name('search-medicine');
         Route::post('/buy', [SellMedicineController::class, 'buyMedicines'])->name('buy-medicines');
+        Route::get('/successful', [SellMedicineController::class, 'transactionSuccessfulPage'])->name('sell-medicine.success');
+        Route::get('/cancelled', [SellMedicineController::class, 'transactionCancelledPage'])->name('sell-medicine.cancelled');
     });
 
     Route::get('/queue/printer', [CheckUpController::class, 'setPrinterForm'])->name('queue.printer.form');

@@ -13,6 +13,22 @@
         <div class="col-md-12">
             <div class="card">
                 <div class="card-body">
+                    
+                    @if ($errors->any())
+                        <div class="card">
+                            <div class="card-header">
+                                <h2>There is an error in your input</h2>
+                            </div>
+                            <div class="card-body">
+                                @foreach ($errors->all() as $error) 
+                                    <div>
+                                        {{ $error }}
+                                    </div>
+                                @endforeach
+                            </div>
+                        </div>
+                    @endif 
+
                     <div class="card-body">
                         <form action="{{ route('search-medicine') }}" method="get" class="d-flex gap-2">
                             @csrf

@@ -6,6 +6,8 @@ use App\Services\BPJS;
 use App\Models\Patient;
 use App\Services\BuyMedicines;
 use App\Observers\PatientObserver;
+use App\Services\PharmacyApp;
+use App\Services\Stripe;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
 
@@ -52,6 +54,14 @@ class AppServiceProvider extends ServiceProvider
 
         $this->app->singleton('buyMedicines', function ($app) {
             return new BuyMedicines;
+        });
+
+        $this->app->singleton('stripe', function ($app) {
+            return new Stripe;
+        });
+
+        $this->app->singleton('pharmacyApp', function ($app) {
+            return new PharmacyApp;
         });
 
         Patient::observe(PatientObserver::class);
