@@ -6,7 +6,7 @@ let locketId = document.querySelector(
 
 let player = new window.talkify.Html5Player();
 
-window.Echo.private(`Locket.${locketId}`).listen(
+window.Echo.channel(`Locket.${locketId}`).listen(
     'QueueReadyForBroadcast',
     (e) => {
         let queueNumberDisplay = document.getElementById('queue-number');
