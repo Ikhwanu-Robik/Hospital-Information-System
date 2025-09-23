@@ -88,7 +88,6 @@ class CheckUpController extends Controller
             'diagnosis' => $validated['diagnosis']
         ]);
         if (isset($validated['medicine_id'])) {
-            // TODO: set status to FINISHED if patient has BPJS
             $prescriptionRecord = $MedicalRecord->prescriptionRecord()->create([
                 'payment_status' => PaymentStatus::PENDING->value
             ]);

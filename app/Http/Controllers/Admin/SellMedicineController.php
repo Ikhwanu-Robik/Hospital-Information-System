@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Facades\BPJS;
 use App\Facades\PharmacyApp;
+use Illuminate\Http\Request;
 use App\Models\PrescriptionRecord;
 use App\Http\Requests\BuyMedicineRequest;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
@@ -32,25 +34,28 @@ class SellMedicineController extends CrudController
         $medicalRecord = PrescriptionRecord::with('medicalRecord.patient')
             ->find($buyMedicineRequest->validated('id'))->medicalRecord;
 
-        // if (!BPJS::validatePatient($medicalRecord->patient->BPJS_number)) {
-        // TODO: integrate with BPJS
+        $patientHasActiveBPJS = BPJS::validatePatient($medicalRecord->patient->NIK);
 
         $lineItems = $prescriptionRecord->prescriptionMedicines->map(fn($pm) => [
             'price' => $pm->medicine->stripe_price_id,
             'quantity' => $pm->dose_amount,
         ])->all();
 
-        $paymentFormLink = PharmacyApp::buyMedicines($lineItems, $prescriptionRecord->id);
+        if (!$patientHasActiveBPJS) {
+            $paymentFormLink = PharmacyApp::buyMedicines($lineItems, $prescriptionRecord->id);
 
-        return redirect()->away($paymentFormLink);
+            return redirect()->away($paymentFormLink);
+        } else {
+            PharmacyApp::withBPJS($patientHasActiveBPJS)
+                ->buyMedicines($lineItems, $prescriptionRecord->id);
 
-        // } else {
-        //      return redirect()->route('sell-medicine.success');
-        // }    
+            return redirect()->route('sell-medicine.success', ['isBPJS' => true]);
+        }
     }
 
-    public function transactionSuccessfulPage()
+    public function transactionSuccessfulPage(Request $request)
     {
+        $patientHasBPJS = $request->query('isBPJS', false);
         $prescripionRecordId = session('prescription_record_id');
         $prescripionRecord = PrescriptionRecord::with('prescriptionMedicines.medicine')
             ->find($prescripionRecordId);
@@ -60,7 +65,8 @@ class SellMedicineController extends CrudController
         }
         return view('admin.sell-medicine-success', [
             'prescriptionRecordId' => $prescripionRecordId,
-            'prescriptionMedicines' => $prescriptionMedicines
+            'prescriptionMedicines' => $prescriptionMedicines,
+            'patientHasBPJS' => $patientHasBPJS
         ]);
     }
 

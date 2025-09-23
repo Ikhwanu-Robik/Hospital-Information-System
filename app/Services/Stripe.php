@@ -60,8 +60,37 @@ class Stripe
         ]);
     }
 
-    public function getLineItems($checkoutSessionId) 
+    public function createCustomer($name)
+    {
+        return $this->stripe->customers->create(['name' => $name, 'email' => config('bpjs.email')]);
+    }
+
+    public function getLineItems($checkoutSessionId)
     {
         return $this->stripe->checkout->sessions->allLineItems($checkoutSessionId)->data;
+    }
+
+    public function createInvoice($customerId, $items)
+    {
+        $invoice = $this->stripe->invoices->create([
+            'customer' => $customerId,
+            'collection_method' => 'send_invoice',
+            'days_until_due' => 30,
+            'currency' => "IDR"
+        ]);
+
+        foreach ($items as $item) {
+            $this->stripe->invoiceItems->create([
+                'customer' => $customerId,
+                'invoice' => $invoice->id,
+                'pricing' => [
+                    'price' => $item['price'],
+                ],
+                'quantity' => $item['quantity'],
+                'currency' => "IDR"
+            ]);
+        }
+
+        return $invoice->finalizeInvoice();
     }
 }

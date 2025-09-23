@@ -26,8 +26,8 @@
                         {{-- Title & Message --}}
                         <h2 class="mb-3">Payment Submitted</h2>
                         <p class="text-muted">
-                            Your payment was submitted successfully. Wait for confirmation for whether the payment is
-                            successful or not.
+                            Your payment was submitted successfully. {{ $patientHasBPJS ? "" : "Wait for confirmation for whether the payment is
+                                successful or not."}}
                         </p>
 
                         @if($prescriptionMedicines)
