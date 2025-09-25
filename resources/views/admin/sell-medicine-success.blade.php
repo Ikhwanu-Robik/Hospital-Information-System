@@ -7,6 +7,7 @@
         @vite('resources/js/listenToStripe.js')
     </div>
     <div id="metas">
+        <meta name="csrf-token" content="{{ csrf_token() }}">
         <meta name="prescription-record-id" content="{{ $prescriptionRecordId }}">
     </div>
 

@@ -81,4 +81,8 @@ class SellMedicineController extends CrudController
         }
         return view('admin.sell-medicine-cancel', ['prescriptionMedicines' => $prescriptionMedicines]);
     }
+
+    public function manualFetchPrescription(PrescriptionRecord $prescriptionRecord) {
+        return $prescriptionRecord;
+    }
 }

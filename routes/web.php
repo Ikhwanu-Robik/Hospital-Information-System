@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CheckUpController;
+use App\Http\Controllers\Admin\SellMedicineController;
 
 require('auth.php');
 
@@ -24,3 +25,5 @@ Route::get('/queue', [CheckUpController::class, 'queueForm'])->name('check-up-qu
 Route::post('/queue', [CheckUpController::class, 'joinQueue'])->name('join-check-up-queue');
 
 Route::get('/locket', [CheckUpController::class, 'locketPage']);
+
+Route::get('/prescriptions/{prescriptionRecord}', [SellMedicineController::class, 'manualFetchPrescription']);
