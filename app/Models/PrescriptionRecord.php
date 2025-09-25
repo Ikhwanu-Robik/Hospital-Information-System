@@ -12,8 +12,24 @@ class PrescriptionRecord extends Model
     use CrudTrait;
     protected $fillable = [
         'medical_record_id',
-        'payment_status'
+        'payment_status',
+        'code'
     ];
+
+    protected static function booted()
+    {
+        static::created(function ($prescription) {
+            // Generate code AFTER we have an ID
+            $prescription->code = sprintf(
+                'RX-%s-%s-%s',
+                $prescription->medicalRecord->patient_id,
+                $prescription->medicalRecord->doctor_profile_id,
+                $prescription->id
+            );
+
+            $prescription->save();
+        });
+    }
 
     public function medicalRecord()
     {

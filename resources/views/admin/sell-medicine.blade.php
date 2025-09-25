@@ -13,28 +13,34 @@
         <div class="col-md-12">
             <div class="card">
                 <div class="card-body">
-                    
+
                     @if ($errors->any())
                         <div class="card">
                             <div class="card-header">
                                 <h2>There is an error in your input</h2>
                             </div>
                             <div class="card-body">
-                                @foreach ($errors->all() as $error) 
+                                @foreach ($errors->all() as $error)
                                     <div>
                                         {{ $error }}
                                     </div>
                                 @endforeach
                             </div>
                         </div>
-                    @endif 
+                    @endif
 
                     <div class="card-body">
                         <form action="{{ route('search-medicine') }}" method="get" class="d-flex gap-2">
                             @csrf
                             <div class="input-group">
-                                <label for="id">Prescription Id</label>
-                                <input type="text" name="id" id="id" class="form-control" placeholder="prescription's id"
+                                <label for="patient_id">RX-</label>
+                                <input type="number" name="patient_id" class="form-control"
+                                 value="{{ request()->query('patient_id') }}">
+                                <label for="doctor_profile_id">-</label>
+                                <input type="number" name="doctor_profile_id" class="form-control"
+                                 value="{{ request()->query('doctor_profile_id') }}">
+                                <label for="id">-</label>
+                                <input type="number" name="id" id="prescription_id" class="form-control"
                                     value="{{ request()->query('id') }}">
                                 <button type="submit" class="btn btn-primary">
                                     <i class="ti ti-search"></i> Search
@@ -42,7 +48,7 @@
                             </div>
                         </form>
 
-                        @if (isset($prescriptionMedicines))
+                        @if (isset($prescriptionMedicines) && isset($prescription))
                             <div id="search-result" class="mt-4">
                                 <div class="card">
                                     <div class="card-header">
@@ -53,7 +59,6 @@
                                             <table class="table card-table table-vcenter text-nowrap datatable">
                                                 <thead>
                                                     <tr>
-                                                        <th>ID</th>
                                                         <th>Name</th>
                                                         <th>Generic Name</th>
                                                         <th>Drug Class</th>
@@ -62,34 +67,32 @@
                                                         <th>Stock</th>
                                                         <th>Price</th>
                                                         <th>Batch #</th>
-                                                        <th>Expiry Date</th>
-                                                        <th>Manufacturer</th>
                                                         <th>Doses</th>
+                                                        <th>Frequency</th>
                                                         <th>Total</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
                                                     @php
-                                                    $grandTotal = 0;
+                                                        $grandTotal = 0;
                                                     @endphp
                                                     @foreach ($prescriptionMedicines as $prescriptionMedicine)
                                                         <tr>
-                                                            <td>{{ $prescriptionMedicine->medicine->id }}</td>
                                                             <td>{{ $prescriptionMedicine->medicine->name }}</td>
                                                             <td>{{ $prescriptionMedicine->medicine->generic_name }}</td>
-                                                            <td>{{ optional($prescriptionMedicine->medicine->drugClass)->name }}</td>
-                                                            <td>{{ optional($prescriptionMedicine->medicine->medicineForm)->name }}</td>
+                                                            <td>{{ optional($prescriptionMedicine->medicine->drugClass)->name }}
+                                                            </td>
+                                                            <td>{{ optional($prescriptionMedicine->medicine->medicineForm)->name }}
+                                                            </td>
                                                             <td>{{ $prescriptionMedicine->medicine->unit }}</td>
                                                             <td>{{ $prescriptionMedicine->medicine->stock }}</td>
                                                             <td>{{ $prescriptionMedicine->medicine->price }}</td>
                                                             <td>{{ $prescriptionMedicine->medicine->batch_number }}</td>
-                                                            <td>{{ \Carbon\Carbon::parse($prescriptionMedicine->medicine->expiry_date)->format('d M Y') }}
-                                                            </td>
-                                                            <td>{{ $prescriptionMedicine->medicine->manufacturer }}</td>
                                                             <td>{{ $prescriptionMedicine->dose_amount }}</td>
+                                                            <td>{{ $prescriptionMedicine->frequency }}</td>
                                                             @php
-                                                            $subTotal = $prescriptionMedicine->dose_amount * $prescriptionMedicine->medicine->price;
-                                                            $grandTotal += $subTotal;
+                                                                $subTotal = $prescriptionMedicine->dose_amount * $prescriptionMedicine->medicine->price;
+                                                                $grandTotal += $subTotal;
                                                             @endphp
                                                             <td>{{ $subTotal }}</td>
                                                         </tr>

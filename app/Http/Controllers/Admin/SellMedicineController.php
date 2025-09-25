@@ -19,7 +19,12 @@ class SellMedicineController extends CrudController
 
     public function searchMedicines(BuyMedicineRequest $buyMedicineRequest)
     {
-        $prescription = PrescriptionRecord::find($buyMedicineRequest->validated('id'));
+        $patientId = $buyMedicineRequest->validated('patient_id');
+        $doctorProfileId = $buyMedicineRequest->validated('doctor_profile_id');
+        $prescriptionId = $buyMedicineRequest->validated('id');
+        $code = "RX-" . $patientId . "-" . $doctorProfileId . "-" . $prescriptionId;
+
+        $prescription = PrescriptionRecord::where('code', $code)->first();
         $prescriptionMedicines = PrescriptionRecord::with(['prescriptionMedicines.medicine'])
             ->find($buyMedicineRequest->validated('id'))->prescriptionMedicines;
 
@@ -82,7 +87,8 @@ class SellMedicineController extends CrudController
         return view('admin.sell-medicine-cancel', ['prescriptionMedicines' => $prescriptionMedicines]);
     }
 
-    public function manualFetchPrescription(PrescriptionRecord $prescriptionRecord) {
+    public function manualFetchPrescription(PrescriptionRecord $prescriptionRecord)
+    {
         return $prescriptionRecord;
     }
 }
