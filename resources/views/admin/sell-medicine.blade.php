@@ -35,10 +35,10 @@
                             <div class="input-group">
                                 <label for="patient_id">RX-</label>
                                 <input type="number" name="patient_id" class="form-control"
-                                 value="{{ request()->query('patient_id') }}">
+                                    value="{{ request()->query('patient_id') }}">
                                 <label for="doctor_profile_id">-</label>
                                 <input type="number" name="doctor_profile_id" class="form-control"
-                                 value="{{ request()->query('doctor_profile_id') }}">
+                                    value="{{ request()->query('doctor_profile_id') }}">
                                 <label for="id">-</label>
                                 <input type="number" name="id" id="prescription_id" class="form-control"
                                     value="{{ request()->query('id') }}">
@@ -107,6 +107,9 @@
 
                                         <form action="{{ route('buy-medicines') }}" method="post" class="mt-3">
                                             @csrf
+                                            <input type="hidden" name="patient_id" value="{{ request()->query('patient_id') }}">
+                                            <input type="hidden" name="doctor_profile_id"
+                                                value="{{ request()->query('doctor_profile_id') }}">
                                             <input type="hidden" name="id" value="{{ $prescription->id }}">
                                             <button type="submit" class="btn btn-success">
                                                 <i class="ti ti-shopping-cart"></i> Buy

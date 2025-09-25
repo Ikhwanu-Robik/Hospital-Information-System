@@ -18,6 +18,11 @@ window.Echo.channel(`Medicine.Dispense.${prescriptionRecordId}`).listen(
             icon: paymentStatusIcon,
             text: "you are good to leave this page 👌",
         });
+
+        document.getElementById("payment-status-msg").textContent =
+            "Payment " + e.paymentStatus;
+        document.getElementById("payment-desc-msg").textContent =
+            "You are good to leave this page 👌";
     }
 );
 
@@ -58,6 +63,11 @@ setTimeout(async () => {
                     icon: paymentStatusIcon,
                     text: "you are good to leave this page 👌",
                 });
+
+                document.getElementById("payment-status-msg").textContent =
+                    "Payment " + body.payment_status;
+                document.getElementById("payment-desc-msg").textContent =
+                    "You are good to leave this page 👌";
             }
         } catch (e) {
             console.error(e);
