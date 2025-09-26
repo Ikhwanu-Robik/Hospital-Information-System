@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Events\StripePaymentProcessed;
 use Stripe\Webhook;
-use Illuminate\Http\Request;
 use App\Facades\PharmacyApp;
+use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Jobs\DelayStripePaymentProcessedEvent;
 use Stripe\Exception\SignatureVerificationException;
 
 class StripeWebhookController extends Controller
@@ -34,9 +34,9 @@ class StripeWebhookController extends Controller
 
         if ($event->type === 'checkout.session.completed') {
             $checkoutSession = $event->data->object;
-            
+
             PharmacyApp::handlePaymentNews($checkoutSession);
-            StripePaymentProcessed::dispatch($checkoutSession);
+            DelayStripePaymentProcessedEvent::dispatch($checkoutSession)->delay(3);
         }
 
         return response('OK', 200);
