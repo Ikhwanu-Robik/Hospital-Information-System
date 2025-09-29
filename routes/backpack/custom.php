@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\SellMedicineController;
 use App\Http\Controllers\CheckUpController;
+use App\Http\Controllers\Admin\PatientVisitReportController;
 use Illuminate\Support\Facades\Route;
 
 // --------------------------
@@ -32,6 +33,8 @@ Route::group([
 
     Route::get('/doctors/ping-interval', [CheckUpController::class, 'setDoctorPingIntervalForm'])->name('doctors.ping-interval-form');
     Route::post('/doctors/ping-interval', [CheckUpController::class, 'setDoctorPingInterval'])->name('doctors.ping-interval');
+
+    Route::get('/report/patient-visit', [PatientVisitReportController::class, 'index'])->name('report.patient-visit');
 
     Route::crud('doctor-profile', 'DoctorProfileCrudController');
     Route::crud('drug-class', 'DrugClassCrudController');

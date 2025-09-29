@@ -50,6 +50,9 @@
             <i class="la la-clock nav-icon"></i> Doctor Ping Interval
         </a>
     </li>
+    <x-backpack::menu-dropdown title="Reports" icon="la la-file-alt">
+        <x-backpack::menu-dropdown-item title="Patient Visit" icon="la la-calendar-check" :link="route('report.patient-visit')" />
+    </x-backpack::menu-dropdown>
 
 @elseif (backpack_user()->hasRole('pharmacist'))
     <x-backpack::menu-item title="Drug classes" icon="la la-sitemap" :link="backpack_url('drug-class')" />

@@ -7,6 +7,7 @@ use App\Models\Patient;
 use App\Observers\PatientObserver;
 use App\Services\PharmacyApp;
 use App\Services\Stripe;
+use App\Services\VisitReport;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
 
@@ -57,6 +58,10 @@ class AppServiceProvider extends ServiceProvider
 
         $this->app->singleton('pharmacyApp', function ($app) {
             return new PharmacyApp;
+        });
+
+        $this->app->singleton('visitReport', function ($app) {
+            return new VisitReport;
         });
 
         Patient::observe(PatientObserver::class);
