@@ -35,21 +35,18 @@
     </x-backpack::menu-dropdown>
 
     <x-backpack::menu-item title="Pharmacist profiles" icon="la la-user-nurse" :link="backpack_url('pharmacist-profile')" />
-    <x-backpack::menu-item title="Users" icon="la la-users" :link="backpack_url('user')" />
-    <x-backpack::menu-item title="Roles" icon="la la-user-tag" :link="backpack_url('role')" />
-    <x-backpack::menu-item title="Permissions" icon="la la-key" :link="backpack_url('permission')" />
 
-    <li class="nav-item">
-        <a class="nav-link" href="{{ route('queue.printer.form') }}">
-            <i class="la la-print nav-icon"></i> Queue Number Printer
-        </a>
-    </li>
+    <x-backpack::menu-dropdown title="Accounts" icon="la la-user">
+        <x-backpack::menu-dropdown-item title="Users" icon="la la-users" :link="backpack_url('user')" />
+        <x-backpack::menu-dropdown-item title="Roles" icon="la la-user-tag" :link="backpack_url('role')" />
+        <x-backpack::menu-dropdown-item title="Permissions" icon="la la-key" :link="backpack_url('permission')" />
+    </x-backpack::menu-dropdown>
 
-    <li class="nav-item">
-        <a class="nav-link" href="{{ route('doctors.ping-interval-form') }}">
-            <i class="la la-clock nav-icon"></i> Doctor Ping Interval
-        </a>
-    </li>
+    <x-backpack::menu-dropdown title="Settings" icon="la la-gear">
+        <x-backpack::menu-dropdown-item title="Thermal Printer" icon="la la-print" :link="route('queue.printer.form')" />
+        <x-backpack::menu-dropdown-item title="Doctor Ping Interval" icon="la la-clock" :link="route('doctors.ping-interval-form')" />
+    </x-backpack::menu-dropdown>
+
     <x-backpack::menu-dropdown title="Reports" icon="la la-file-alt">
         <x-backpack::menu-dropdown-item title="Patient Visit" icon="la la-calendar-check" :link="route('report.patient-visit')" />
     </x-backpack::menu-dropdown>
