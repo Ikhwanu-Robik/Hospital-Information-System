@@ -40,7 +40,7 @@ class PatientVisitReportController extends Controller
         } else {
             $reportByGender = VisitReport::get(VisitReportType::BY_GENDER);
             $reportByAgeGroup = VisitReport::get(VisitReportType::BY_AGE_GROUP);
-            $reportByTimeOfTheDay = VisitReport::get(VisitReportType::BY_AGE_GROUP);
+            $reportByTimeOfTheDay = VisitReport::get(VisitReportType::BY_TIME_OF_DAY);
             $reportByBPJS = VisitReport::get(VisitReportType::BY_BPJS);
             $reportBySpecialization = VisitReport::get(VisitReportType::BY_SPECIALIZATION);
         }
