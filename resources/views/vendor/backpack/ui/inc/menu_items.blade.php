@@ -49,6 +49,7 @@
 
     <x-backpack::menu-dropdown title="Reports" icon="la la-file-alt">
         <x-backpack::menu-dropdown-item title="Patient Visit" icon="la la-calendar-check" :link="route('report.patient-visit')" />
+        <x-backpack::menu-dropdown-item title="Patient Medicine Usage" icon="la la-pills" :link="route('report.patient-medicine-usage')" />
     </x-backpack::menu-dropdown>
 
 @elseif (backpack_user()->hasRole('pharmacist'))

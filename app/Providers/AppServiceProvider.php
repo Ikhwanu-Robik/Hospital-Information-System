@@ -5,6 +5,7 @@ namespace App\Providers;
 use App\Services\BPJS;
 use App\Models\Patient;
 use App\Observers\PatientObserver;
+use App\Services\MedicineUsageReport;
 use App\Services\PharmacyApp;
 use App\Services\Stripe;
 use App\Services\VisitReport;
@@ -62,6 +63,10 @@ class AppServiceProvider extends ServiceProvider
 
         $this->app->singleton('visitReport', function ($app) {
             return new VisitReport;
+        });
+
+        $this->app->singleton('medicineUsageReport', function ($app) {
+            return new MedicineUsageReport;
         });
 
         Patient::observe(PatientObserver::class);

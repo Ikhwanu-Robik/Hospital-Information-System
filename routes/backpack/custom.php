@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\PatientMedicineUsageController;
 use App\Http\Controllers\Admin\SellMedicineController;
 use App\Http\Controllers\CheckUpController;
 use App\Http\Controllers\Admin\PatientVisitReportController;
@@ -35,6 +36,7 @@ Route::group([
     Route::post('/doctors/ping-interval', [CheckUpController::class, 'setDoctorPingInterval'])->name('doctors.ping-interval');
 
     Route::get('/report/patient-visit', [PatientVisitReportController::class, 'index'])->name('report.patient-visit');
+    Route::get('/report/patient-medicine-usage', [PatientMedicineUsageController::class, 'index'])->name('report.patient-medicine-usage');
 
     Route::crud('doctor-profile', 'DoctorProfileCrudController');
     Route::crud('drug-class', 'DrugClassCrudController');
