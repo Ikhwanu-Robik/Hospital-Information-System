@@ -221,7 +221,8 @@ class VisitReport
             WHEN HOUR(medical_records.created_at) BETWEEN 3 AND 7 THEN 'Morning (3 to 7)'
             WHEN HOUR(medical_records.created_at) BETWEEN 8 AND 13 THEN 'Noon (8 to 13)'
             WHEN HOUR(medical_records.created_at) BETWEEN 14 AND 18 THEN 'Evening (14 to 18)'
-            WHEN HOUR(medical_records.created_at) BETWEEN 19 AND 2 THEN 'Night (19 to 2)'
+            WHEN HOUR(medical_records.created_at) BETWEEN 19 AND 23 THEN 'Night (19 to 2)'
+            WHEN HOUR(medical_records.created_at) BETWEEN 0 AND 2 THEN 'Night (19 to 2)'
             ELSE 'invalid time'
         END as time_group,
         COUNT(medical_records.id) as record_count
@@ -258,7 +259,8 @@ class VisitReport
             WHEN HOUR(medical_records.created_at) BETWEEN 3 AND 7 THEN 'Morning (3 to 7)'
             WHEN HOUR(medical_records.created_at) BETWEEN 8 AND 13 THEN 'Noon (8 to 13)'
             WHEN HOUR(medical_records.created_at) BETWEEN 14 AND 18 THEN 'Evening (14 to 18)'
-            WHEN HOUR(medical_records.created_at) BETWEEN 19 AND 2 THEN 'Night (19 to 2)'
+            WHEN HOUR(medical_records.created_at) BETWEEN 19 AND 23 THEN 'Night (19 to 2)'
+            WHEN HOUR(medical_records.created_at) BETWEEN 0 AND 2 THEN 'Night (19 to 2)'
             ELSE 'invalid time'
         END as time_group,
         COUNT(medical_records.id) as record_count
