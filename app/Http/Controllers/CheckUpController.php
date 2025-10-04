@@ -103,7 +103,6 @@ class CheckUpController extends Controller
         $checkUpQueue = CheckUpQueue::find($validated['queue_id']);
         $checkUpQueue->status = CheckUpStatus::FINISHED->value;
         $checkUpQueue->save();
-        DoctorIsFree::dispatch(DoctorProfile::find($validated['doctor_profile_id']));
 
         if (isset($validated['medicine_id'])) {
             return redirect()
@@ -159,7 +158,6 @@ class CheckUpController extends Controller
         $checkUpQueue = CheckUpQueue::find($validated['queue_id_skip']);
         $checkUpQueue->status = CheckUpStatus::SKIPPED->value;
         $checkUpQueue->save();
-        DoctorIsFree::dispatch(DoctorProfile::find($validated['doctor_profile_id']));
 
         return back();
     }
