@@ -21,9 +21,9 @@ class QueueApp
     {
         $this->specialization = $specialization;
 
-        $specializationHasQueue = CheckUpQueue::with('doctorProfile.specialization')
-            ->get()->where('doctorProfile.specialization.id', $this->specialization->id)
-            ->isNotEmpty();
+        $specializationHasQueue = CheckUpQueue::whereHas('doctorProfile', function ($query) {
+            $query->where('specialization_id', $this->specialization->id);
+        })->exists();
 
         if ($specializationHasQueue) {
             // find number of queues owned by each locket that have queue
