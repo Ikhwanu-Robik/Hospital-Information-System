@@ -75,9 +75,15 @@
                                                 <tbody>
                                                     @php
                                                         $grandTotal = 0;
+                                                        $isDispensable = [];
+
+                                                        $index = 0;
                                                     @endphp
                                                     @foreach ($prescriptionMedicines as $prescriptionMedicine)
-                                                        <tr>
+                                                        @php
+                                                            $isDispensable[$index] = $prescriptionMedicine->medicine->stock > $prescriptionMedicine->dose_amount;
+                                                        @endphp
+                                                        <tr class={{ (!$isDispensable[$index++]) ? 'bg-danger' : '' }}>
                                                             <td>{{ $prescriptionMedicine->medicine->name }}</td>
                                                             <td>{{ $prescriptionMedicine->medicine->generic_name }}</td>
                                                             <td>{{ optional($prescriptionMedicine->medicine->drugClass)->name }}
@@ -105,16 +111,37 @@
                                             </table>
                                         </div>
 
-                                        <form action="{{ route('buy-medicines') }}" method="post" class="mt-3">
-                                            @csrf
-                                            <input type="hidden" name="patient_id" value="{{ request()->query('patient_id') }}">
-                                            <input type="hidden" name="doctor_profile_id"
-                                                value="{{ request()->query('doctor_profile_id') }}">
-                                            <input type="hidden" name="id" value="{{ $prescription->id }}">
-                                            <button type="submit" class="btn btn-success">
-                                                <i class="ti ti-shopping-cart"></i> Buy
-                                            </button>
-                                        </form>
+                                        @php
+                                            $isAllDispensable = true;
+                                            
+                                            foreach ($isDispensable as $dispensable) {
+                                                if (!$dispensable) {
+                                                    $isAllDispensable = false;
+                                                    break;
+                                                }
+                                            }
+                                        @endphp
+                                        @if ($isAllDispensable)
+                                            <form action="{{ route('buy-medicines') }}" method="post" class="mt-3">
+                                                @csrf
+                                                <input type="hidden" name="patient_id" value="{{ request()->query('patient_id') }}">
+                                                <input type="hidden" name="doctor_profile_id"
+                                                    value="{{ request()->query('doctor_profile_id') }}">
+                                                <input type="hidden" name="id" value="{{ $prescription->id }}">
+                                                <button type="submit" class="btn btn-success">
+                                                    <i class="ti ti-shopping-cart"></i> Buy
+                                                </button>
+                                            </form>
+                                        @else
+                                            <div class="card">
+                                                <div class="card-header">
+                                                    <h2>Stock Insufficient</h2>
+                                                </div>
+                                                <div class="card-body">
+                                                    <p>The red table row indicates that the medicine's dose amount exceed the available stock</p>
+                                                </div>
+                                            </div>
+                                        @endif
                                     </div>
                                 </div>
                             </div>
