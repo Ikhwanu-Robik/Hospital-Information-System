@@ -59,16 +59,40 @@ class QueueApp
                 ->whereHas('doctorProfile.specialization', function ($query) {
                     $query->where('id', $this->specialization->id);
                 })
+                ->whereHas('doctorProfile.schedules', function ($query) {
+                    $now = now();
+                    $query->where('day_of_week', $now->dayName)
+                        ->where('start_time', '<=', $now->format('H:i:s'))
+                        ->where('end_time', '>=', $now->format('H:i:s'));
+                })
                 ->with('doctorProfile')
                 ->groupBy('doctor_profile_id')
                 ->get();
 
-            // if only some doctor have queue
-            if ($queueDoctors->count() != DoctorProfile::where('specialization_id', $this->specialization->id)->count('id')) {
+            $inScheduleDoctorCount = DoctorProfile::where('specialization_id', $this->specialization->id)
+                ->whereHas('schedules', function ($query) {
+                    $now = now();
+                    $query->where('day_of_week', $now->dayName)
+                        ->where('start_time', '<=', $now->format('H:i:s'))
+                        ->where('end_time', '>=', $now->format('H:i:s'));
+                })
+                ->count('id');
+
+            // if only some in-schedule doctor have queue
+            if ($queueDoctors->count() != $inScheduleDoctorCount) {
                 // choose one of the missing doctor to be given patient
                 $busyDoctorIds = $queueDoctors->pluck('doctor_profile_id');
-                $freeDoctors = DoctorProfile::where('specialization_id', $this->specialization->id)->whereNotIn('id', $busyDoctorIds)->get();
-                $this->doctor = $freeDoctors->random();
+                $freeDoctorsInSchedule = DoctorProfile::where('specialization_id', $this->specialization->id)
+                    ->whereNotIn('id', $busyDoctorIds)
+                    ->whereHas('schedules', function ($query) {
+                        $now = now();
+                        $query->where('day_of_week', $now->dayName)
+                            ->where('start_time', '<=', $now->format('H:i:s'))
+                            ->where('end_time', '>=', $now->format('H:i:s'));
+                    })
+                    ->get();
+
+                $this->doctor = $freeDoctorsInSchedule->random();
             } else {
                 // choose the doctor with the least queues_count
                 $this->doctor = $queueDoctors->sortBy('queues_count')->first()->doctorProfile;
@@ -77,6 +101,12 @@ class QueueApp
             $this->locket = Locket::get()->random();
             $this->previousQueue = CheckUpQueue::where('locket_id', $this->locket->id)->latest()->first();
             $this->doctor = DoctorProfile::where('specialization_id', $specialization->id)
+                ->whereHas('schedules', function ($query) {
+                    $now = now();
+                    $query->where('day_of_week', $now->dayName)
+                        ->where('start_time', '<=', $now->format('H:i:s'))
+                        ->where('end_time', '>=', $now->format('H:i:s'));
+                })
                 ->get()->random();
         }
 
