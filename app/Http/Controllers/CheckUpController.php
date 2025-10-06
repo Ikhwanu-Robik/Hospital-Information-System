@@ -186,6 +186,11 @@ class CheckUpController extends Controller
         return view('check-up-queue-number', ['queueNumber' => $queueNumber, 'printerName' => $printerName]);
     }
 
+    public function allLocket() {
+        $locketIds = Locket::get('id');
+        return view('all-lockets', ['locketIds' => $locketIds]);
+    }
+
     public function locketPage(Request $request)
     {
         $locket = Locket::find($request->query('id'));

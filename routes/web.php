@@ -24,6 +24,8 @@ Route::get('/queue', [CheckUpController::class, 'queueForm'])->name('check-up-qu
 
 Route::post('/queue', [CheckUpController::class, 'joinQueue'])->name('join-check-up-queue');
 
-Route::get('/locket', [CheckUpController::class, 'locketPage']);
+Route::get('/locket', [CheckUpController::class, 'locketPage'])->name('locket');
+
+Route::get('/locket/all', [CheckUpController::class, 'allLocket'])->name('locket.all');
 
 Route::get('/prescriptions/{prescriptionRecord}', [SellMedicineController::class, 'manualFetchPrescription']);

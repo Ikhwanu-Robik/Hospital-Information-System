@@ -2,6 +2,7 @@
 
 use App\Enums\CheckUpStatus;
 use App\Events\DoctorIsFree;
+use App\Models\CheckUpQueue;
 use App\Models\DoctorProfile;
 use App\Models\DoctorSchedule;
 use Illuminate\Support\Facades\Broadcast;
@@ -19,7 +20,7 @@ Broadcast::channel('CheckUp.Doctors.{doctorProfile}', function ($user, DoctorPro
             ->where('status', CheckUpStatus::WAITING->value)
             ->exists();
 
-    if ($doctorProfile->user->can('accept patient') && $isDoctorInSchedule && $isDoctorBusy) {    
+    if ($doctorProfile->user->can('accept patient') && $isDoctorInSchedule && $isDoctorBusy) {
         DoctorIsFree::dispatch($doctorProfile); // ->delay(now()->addSeconds(3))
         return true;
     }
