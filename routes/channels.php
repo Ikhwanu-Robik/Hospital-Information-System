@@ -20,8 +20,10 @@ Broadcast::channel('CheckUp.Doctors.{doctorProfile}', function ($user, DoctorPro
             ->where('status', CheckUpStatus::WAITING->value)
             ->exists();
 
-    if ($doctorProfile->user->can('accept patient') && $isDoctorInSchedule && $isDoctorBusy) {
-        DoctorIsFree::dispatch($doctorProfile); // ->delay(now()->addSeconds(3))
+    if ($doctorProfile->user->can('accept patient') && $isDoctorInSchedule) {
+        if ($isDoctorBusy) {
+            DoctorIsFree::dispatch($doctorProfile); // ->delay(now()->addSeconds(3))
+        }
         return true;
     }
     return false;
