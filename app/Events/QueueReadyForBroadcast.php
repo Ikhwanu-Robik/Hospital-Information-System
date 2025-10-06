@@ -39,7 +39,7 @@ class QueueReadyForBroadcast implements ShouldBroadcast
     public function broadcastOn(): array
     {
         return [
-            new PrivateChannel('Locket.' . $this->locket->id),
+            new Channel('Locket.' . $this->locket->id),
         ];
     }
 }
