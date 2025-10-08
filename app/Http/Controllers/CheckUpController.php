@@ -9,6 +9,7 @@ use App\Models\Patient;
 use App\Models\Medicine;
 use App\Models\PrescriptionMedicine;
 use App\Models\Setting;
+use App\Rules\SpecializationHasOnDutyDoctor;
 use App\Services\QueueApp;
 use App\Events\DoctorIsFree;
 use App\Models\CheckUpQueue;
@@ -177,7 +178,11 @@ class CheckUpController extends Controller
     {
         $validated = $request->validate([
             'medical_record_number' => 'required|exists:patients,medical_record_number',
-            'specialization' => 'required|exists:specializations,name',
+            'specialization' => [
+                'required',
+                'exists:specializations,name',
+                new SpecializationHasOnDutyDoctor
+            ],
         ]);
 
         $specialization = Specialization::where('name', $validated['specialization'])->first();
