@@ -81,7 +81,7 @@
                                                     @endphp
                                                     @foreach ($prescriptionMedicines as $prescriptionMedicine)
                                                         @php
-                                                            $isDispensable[$index] = $prescriptionMedicine->medicine->stock > $prescriptionMedicine->dose_amount;
+                                                            $isDispensable[$index] = $prescriptionMedicine->medicine->stock >= $prescriptionMedicine->dose_amount;
                                                         @endphp
                                                         <tr class={{ (!$isDispensable[$index++]) ? 'bg-danger' : '' }}>
                                                             <td>{{ $prescriptionMedicine->medicine->name }}</td>
