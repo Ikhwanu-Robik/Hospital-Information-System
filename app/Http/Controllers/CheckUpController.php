@@ -7,6 +7,7 @@ use App\Enums\PaymentStatus;
 use App\Models\Locket;
 use App\Models\Patient;
 use App\Models\Medicine;
+use App\Models\PrescriptionMedicine;
 use App\Models\Setting;
 use App\Services\QueueApp;
 use App\Events\DoctorIsFree;
@@ -108,11 +109,8 @@ class CheckUpController extends Controller
             return redirect()
                 ->route('medicine-prescription.print')
                 ->with(
-                    'prescriptions',
-                    $prescriptionRecord
-                        ->prescriptionMedicines()
-                        ->with('medicine')
-                        ->get()
+                    'prescription_record_id',
+                    $prescriptionRecord->id
                 );
         } else {
             return back();
@@ -131,8 +129,16 @@ class CheckUpController extends Controller
     {
         $printer = Setting::where('key', 'queue-app-default-printer')->first();
         $printerName = $printer ? $printer->value : null;
+        $prescriptionRecordId = session('prescription_record_id');
 
-        return view('doctor.print-medicine-prescriptions', ['printerName' => $printerName]);
+        $prescriptions = PrescriptionMedicine::with('medicine')
+            ->where('prescription_record_id', $prescriptionRecordId)
+            ->get();
+
+        return view('doctor.print-medicine-prescriptions', [
+            'printerName' => $printerName,
+            'prescriptions' => $prescriptions
+        ]);
     }
 
     public function callPatient(Request $request)
@@ -186,7 +192,8 @@ class CheckUpController extends Controller
         return view('check-up-queue-number', ['queueNumber' => $queueNumber, 'printerName' => $printerName]);
     }
 
-    public function allLocket() {
+    public function allLocket()
+    {
         $locketIds = Locket::get('id');
         return view('all-lockets', ['locketIds' => $locketIds]);
     }

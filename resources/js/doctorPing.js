@@ -1,7 +1,7 @@
 let doctorPingInterval = document.querySelector('meta[name="doctor-ping-interval"]').content;
 let doctorProfileId = document.querySelector('meta[name="doctor-profile-id"]').content;
 
-setInterval(() => {
+window.doctorPingProcess = setInterval(() => {
     fetch(`/doctors/${doctorProfileId}/ping`, {
         method: "POST",
         headers: {

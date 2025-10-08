@@ -10,7 +10,7 @@
     @vite('resources/css/print-medicine-prescriptions.css')
     <meta name="page-name" content="print-medicine-prescription">
     <meta name="printer-name" content="{{ $printerName }}">
-    <meta name="prescriptions" content="{{ json_encode(session('prescriptions')) }}">
+    <meta name="prescriptions" content="{{ json_encode($prescriptions) }}">
 </head>
 
 <body>

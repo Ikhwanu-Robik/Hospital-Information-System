@@ -51,6 +51,8 @@ form.addEventListener('submit', (event) => {
     event.preventDefault();
     event.stopPropagation();
 
+    clearInterval(window.doctorPingProcess);
+
     let validationResult = [];
 
     validationResult.push(medicineIdNotEmpty());
