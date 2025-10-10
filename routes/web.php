@@ -6,6 +6,8 @@ use App\Http\Controllers\Admin\SellMedicineController;
 
 require('auth.php');
 
+Route::view('/', 'index');
+
 Route::post('/doctors/{doctorProfile}/ping', [CheckUpController::class, 'doctorPing'])->middleware('auth');
 
 Route::get('/diagnose', [CheckUpController::class, 'diagnoseForm'])->middleware('auth')->name('doctor.diagnosis-form');
