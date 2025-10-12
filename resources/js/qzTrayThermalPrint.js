@@ -101,15 +101,65 @@ async function printQueueNumber(queueNumber) {
     }
 }
 
+function getAge(dateString) {
+    let today = new Date();
+    let birthDate = new Date(dateString);
+
+    let age = today.getFullYear() - birthDate.getFullYear();
+    let monthDiff = today.getMonth() - birthDate.getMonth();
+
+    if (
+        monthDiff < 0 ||
+        (monthDiff === 0 && today.getDate() < birthDate.getDate())
+    ) {
+        age--;
+    }
+
+    return age;
+}
+
 async function printMedicinePrescriptions(prescriptions) {
     try {
         let printerName = getQueueAppPrinter();
+
+        let patientBirthdate = prescriptions.medical_record.patient.birthdate;
+        let patientAge = getAge(patientBirthdate);
+
+        // TODO: change the format of Prescripton to match design
+        // INCLUDE THE PRESCRIPTION CODE
+
         if (printerName != "") {
             let config = qz.configs.create(printerName);
             let data = [
                 "\x1B" + "\x40", // init
             ];
-            prescriptions.forEach((prescription) => {
+
+            data.push(prescriptions.code);
+            data.push("\x0A"); // line break
+
+            data.push("\x1B" + "\x61" + "\x31"); // center text
+            data.push("RESEP OBAT");
+            data.push("RS AMAL SEHAT");
+            data.push("\x0A"); // line break
+            data.push("\x1B" + "\x61" + "\x30"); // left align
+
+            data.push(
+                "dr." + prescriptions.medical_record.doctor_profile.full_name
+            );
+            data.push("\x0A"); // line break
+
+            data.push(
+                "Untuk:" + prescriptions.medical_record.patient.full_name
+            );
+            data.push("\x0A"); // line break
+
+            data.push("Usia:" + patientAge);
+            data.push("\x0A"); // line break
+
+            data.push("Diagnosis:" + prescriptions.medical_record.diagnosis);
+            data.push("\x0A"); // line break
+
+            prescriptions.prescription_medicines.forEach((prescription) => {
                 let medicineName = prescription.medicine.name;
                 let quantity = prescription.dose_amount;
                 let frequency = prescription.frequency;

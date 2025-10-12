@@ -2,23 +2,22 @@
 
 namespace App\Http\Controllers;
 
-use App\Enums\CheckUpStatus;
-use App\Enums\PaymentStatus;
 use App\Models\Locket;
 use App\Models\Patient;
-use App\Models\Medicine;
-use App\Models\PrescriptionMedicine;
 use App\Models\Setting;
-use App\Rules\SpecializationHasOnDutyDoctor;
+use App\Models\Medicine;
 use App\Services\QueueApp;
-use App\Events\DoctorIsFree;
+use App\Enums\CheckUpStatus;
+use App\Enums\PaymentStatus;
 use App\Models\CheckUpQueue;
 use Illuminate\Http\Request;
 use App\Models\DoctorProfile;
 use App\Models\MedicalRecord;
 use App\Models\Specialization;
+use App\Models\PrescriptionRecord;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use App\Rules\SpecializationHasOnDutyDoctor;
 
 class CheckUpController extends Controller
 {
@@ -132,9 +131,12 @@ class CheckUpController extends Controller
         $printerName = $printer ? $printer->value : null;
         $prescriptionRecordId = session('prescription_record_id');
 
-        $prescriptions = PrescriptionMedicine::with('medicine')
-            ->where('prescription_record_id', $prescriptionRecordId)
-            ->get();
+        $prescriptions = PrescriptionRecord::with([
+            'prescriptionMedicines.medicine',
+            'medicalRecord.patient',
+            'medicalRecord.doctorProfile'
+        ])
+            ->find($prescriptionRecordId);
 
         return view('doctor.print-medicine-prescriptions', [
             'printerName' => $printerName,
