@@ -150,10 +150,6 @@ class CheckUpController extends Controller
             'doctor_profile_id' => 'required|exists:doctor_profiles,id'
         ]);
 
-        // we can simply dispatch this event without passing the patient to be called
-        // because the patient is certainly the patient that has waited the longest
-        DoctorIsFree::dispatch(DoctorProfile::find($validated['doctor_profile_id']));
-
         return back();
     }
 
