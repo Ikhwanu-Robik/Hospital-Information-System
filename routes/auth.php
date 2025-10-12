@@ -14,7 +14,17 @@ Route::post('/login', function (Request $request) {
         'password' => 'required'
     ]);
     if (Auth::attempt($validated)) {
-        return redirect()->intended();
+        $intendedUrl = session()->get('url.intended');
+        $user = Auth::user();
+
+        if ($intendedUrl) {
+            return redirect()->intended();
+        } else if ($user->hasRole('doctor')) {
+            return redirect()->route('doctor.diagnosis-form');
+        }
+        // other roles are not redirected here because 
+        // they use backpack's login system
+        // and therefore a different login controller
     }
 })->name('login.action');
 
