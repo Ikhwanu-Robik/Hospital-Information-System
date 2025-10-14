@@ -1,5 +1,14 @@
 import './app';
 
+const overlay = document.getElementById('overlay');
+
+overlay.addEventListener('click', () => {
+    player.playText('Locket ready to call patient');
+
+    // Hide overlay
+    overlay.classList.add('hidden');
+});
+
 let locketId = document.querySelector(
     'meta[name="locket-id"]'
 ).content;

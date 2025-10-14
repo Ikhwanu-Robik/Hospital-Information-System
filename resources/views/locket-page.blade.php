@@ -19,6 +19,8 @@
 </head>
 
 <body>
+    <div id="overlay">Click to Start</div>
+
     <nav class="locket-nav">
         <h3>Locket {{ $locket->code }}</h3>
     </nav>
