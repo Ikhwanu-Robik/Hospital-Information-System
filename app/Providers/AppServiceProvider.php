@@ -7,6 +7,7 @@ use App\Models\Patient;
 use App\Observers\PatientObserver;
 use App\Services\MedicineUsageReport;
 use App\Services\PharmacyApp;
+use App\Services\QZTray;
 use App\Services\Stripe;
 use App\Services\VisitReport;
 use Illuminate\Support\Facades\Gate;
@@ -67,6 +68,10 @@ class AppServiceProvider extends ServiceProvider
 
         $this->app->singleton('medicineUsageReport', function ($app) {
             return new MedicineUsageReport;
+        });
+
+        $this->app->singleton('qzTray', function ($app) {
+            return new QZTray;
         });
 
         Patient::observe(PatientObserver::class);

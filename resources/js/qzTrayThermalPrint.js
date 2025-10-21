@@ -3,6 +3,9 @@ import Swal from "sweetalert2";
 
 document.addEventListener("DOMContentLoaded", async () => {
     let pageName = document.querySelector('meta[name="page-name"]').content;
+
+    setSecurity();
+
     await startConnection();
     if (pageName == "set-queue-number-printer") {
         await allPrinters();
@@ -19,6 +22,31 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
     await closeConnection();
 });
+
+function setSecurity() {
+    qz.security.setCertificatePromise(function (resolve, reject) {
+        fetch("http://127.0.0.1:8000/api/qztray/certificate", {
+            cache: "no-store",
+            headers: { "Content-Type": "text/plain" },
+        }).then(function (data) {
+            data.ok ? resolve(data.text()) : reject(data.text());
+        });
+    });
+
+    qz.security.setSignatureAlgorithm("SHA512"); // Since 2.1
+    qz.security.setSignaturePromise(function (toSign) {
+        return function (resolve, reject) {
+            fetch("http://127.0.0.1:8000/api/qztray/message/sign", {
+                method: "POST",
+                cache: "no-store",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ message: toSign }),
+            }).then(function (data) {
+                data.ok ? resolve(data.text()) : reject(data.text());
+            });
+        };
+    });
+}
 
 document
     .querySelector("button#printButton")
