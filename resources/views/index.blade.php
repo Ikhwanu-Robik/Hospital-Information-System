@@ -1,136 +1,289 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Hospital Information System</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-  <style>
-    body {
-      font-family: 'Inter', sans-serif;
-      background-color: #f8f9fa;
-    }
-    .hero {
-      min-height: 80vh;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      text-align: center;
-      padding: 2rem;
-    }
-    .hero h1 {
-      font-size: 2.5rem;
-      margin-bottom: 1rem;
-      color: #0d6efd;
-    }
-    .hero p {
-      color: #6c757d;
-      margin-bottom: 2rem;
-    }
-    .role-btn {
-      width: 200px;
-      margin: 10px;
-      padding: 1rem;
-      font-size: 1.1rem;
-      border-radius: 1rem;
-    }
-    .features {
-      background-color: white;
-      padding: 4rem 2rem;
-    }
-    .feature-card {
-      border: none;
-      border-radius: 1rem;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-      transition: transform 0.2s;
-    }
-    .feature-card:hover {
-      transform: translateY(-5px);
-    }
-    .modal-header {
-      background-color: #0d6efd;
-      color: white;
-      border-top-left-radius: 0.5rem;
-      border-top-right-radius: 0.5rem;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hospital Information System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            width: 100%;
+            padding: 60px 40px;
+            text-align: center;
+        }
+
+        .header {
+            margin-bottom: 50px;
+        }
+
+        .logo {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            font-size: 32px;
+            color: #1a3a52;
+            margin-bottom: 12px;
+            font-weight: 700;
+        }
+
+        .subtitle {
+            font-size: 16px;
+            color: #666;
+            line-height: 1.6;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 20px;
+            margin-top: 40px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .btn {
+            flex: 1;
+            min-width: 200px;
+            padding: 16px 32px;
+            font-size: 16px;
+            font-weight: 600;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-patient {
+            background-color: #0066cc;
+            color: white;
+        }
+
+        .btn-patient:hover {
+            background-color: #0052a3;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0, 102, 204, 0.3);
+        }
+
+        .btn-staff {
+            background-color: #00a86b;
+            color: white;
+        }
+
+        .btn-staff:hover {
+            background-color: #008856;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0, 168, 107, 0.3);
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 10% auto;
+            padding: 40px;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .close:hover {
+            color: #000;
+        }
+
+        .modal h2 {
+            color: #1a3a52;
+            margin-bottom: 30px;
+            font-size: 24px;
+        }
+
+        .staff-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .staff-btn {
+            padding: 20px;
+            background-color: #f0f4f8;
+            border: 2px solid #e0e8f0;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            color: #1a3a52;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .staff-btn:hover {
+            background-color: #00a86b;
+            color: white;
+            border-color: #00a86b;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 168, 107, 0.2);
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 40px 20px;
+            }
+
+            h1 {
+                font-size: 24px;
+            }
+
+            .button-group {
+                flex-direction: column;
+            }
+
+            .btn {
+                min-width: 100%;
+            }
+
+            .staff-buttons {
+                grid-template-columns: 1fr;
+            }
+
+            .modal-content {
+                margin: 30% auto;
+                padding: 30px 20px;
+            }
+        }
+    </style>
 </head>
 <body>
-  <section class="hero">
-    <h1>Welcome to Hospital Information System</h1>
-    <p>Who are you?</p>
-    <div class="d-flex flex-column flex-sm-row justify-content-center">
-      <a href="{{ route('check-up-queue-form') }}" class="btn btn-primary role-btn">Patient</a>
-      <button class="btn btn-success role-btn" data-bs-toggle="modal" data-bs-target="#staffModal">Staff</button>
-    </div>
-  </section>
-
-  <!-- Staff Modal -->
-  <div class="modal fade" id="staffModal" tabindex="-1" aria-labelledby="staffModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="staffModalLabel">Select Your Staff Role</h5>
-          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body text-center">
-          <div class="d-grid gap-3">
-            <a href="{{ route('doctor.diagnosis-form') }}" class="btn btn-outline-primary">Doctor</a>
-            <a href="{{ backpack_url('patient') }}" class="btn btn-outline-success">Administration Officer</a>
-            <a href="{{ backpack_url('medicine') }}" class="btn btn-outline-info">Pharmacist</a>
-            <a href="{{ backpack_url('dashboard') }}" class="btn btn-outline-danger">System Administrator</a>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Features Section -->
-  <section class="features text-center">
     <div class="container">
-      <h2 class="mb-5 text-primary">Main Features</h2>
-      <div class="row g-4">
-        <div class="col-md-4">
-          <div class="card feature-card p-4">
-            <h5>Outpatient Check-up</h5>
-            <p>Manage and record patient visits efficiently for outpatient care.</p>
-          </div>
+        <div class="header">
+            <div class="logo">🏥</div>
+            <h1>Hospital Information System</h1>
+            <p class="subtitle">Select your role to access the system and manage your healthcare needs efficiently.</p>
         </div>
-        <div class="col-md-4">
-          <div class="card feature-card p-4">
-            <h5>Patient Queuing System</h5>
-            <p>Real-time queue management to optimize patient flow.</p>
-          </div>
-        </div>
-        <div class="col-md-4">
-          <div class="card feature-card p-4">
-            <h5>Pharmacist Menu</h5>
-            <p>Manage prescriptions, inventory, and drug dispensing process.</p>
-          </div>
-        </div>
-        <div class="col-md-4">
-          <div class="card feature-card p-4">
-            <h5>BPJS Integration</h5>
-            <p>Seamlessly connect with BPJS services for insurance management.</p>
-          </div>
-        </div>
-        <div class="col-md-4">
-          <div class="card feature-card p-4">
-            <h5>Stripe Integration</h5>
-            <p>Accept online payments securely via Stripe platform.</p>
-          </div>
-        </div>
-        <div class="col-md-4">
-          <div class="card feature-card p-4">
-            <h5>Visit & Medicine Reports</h5>
-            <p>Generate insightful reports on patient visits and medicine usage.</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
 
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+        <div class="button-group">
+            <button class="btn btn-patient" onclick="handlePatientClick()">Patient</button>
+            <button class="btn btn-staff" onclick="openStaffModal()">Staff</button>
+        </div>
+    </div>
+
+    <!-- Staff Modal -->
+    <div id="staffModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeStaffModal()">&times;</span>
+            <h2>Select Staff Type</h2>
+            <div class="staff-buttons">
+                <button class="staff-btn" onclick="handleStaffSelection('Doctor')">Doctor</button>
+                <button class="staff-btn" onclick="handleStaffSelection('Administration Officer')">Administration Officer</button>
+                <button class="staff-btn" onclick="handleStaffSelection('Pharmacist')">Pharmacist</button>
+                <button class="staff-btn" onclick="handleStaffSelection('Sysadmin')">Sysadmin</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const staffModal = document.getElementById('staffModal');
+
+        function openStaffModal() {
+            staffModal.style.display = 'block';
+        }
+
+        function closeStaffModal() {
+            staffModal.style.display = 'none';
+        }
+
+        function handlePatientClick() {
+            window.location.href = "{{ route('check-up-queue-form') }}";
+        }
+
+        function handleStaffSelection(staffType) {
+            switch (staffType) {
+                case 'Doctor':
+                    window.location.href = "{{ route('doctor.diagnosis-form') }}";
+                    break;
+                case 'Administration Officer':
+                    window.location.href = "{{ backpack_url('patient') }}";
+                    break;
+                case 'Pharmacist':
+                    window.location.href = "{{ backpack_url('medicine') }}";
+                    break;
+                case 'Sysadmin':
+                    window.location.href = "{{ backpack_url('dashboard') }}";
+                    break;
+            }
+
+            closeStaffModal();
+        }
+
+        // Close modal when clicking outside of it
+        window.onclick = function(event) {
+            if (event.target === staffModal) {
+                closeStaffModal();
+            }
+        }
+    </script>
 </body>
 </html>
