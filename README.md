@@ -83,6 +83,10 @@ STRIPE_WEBHOOK_SECRET="whsec_stripewebhooksecret"
 BPJS_CONS_ID="bpjs-cons-id"
 BPJS_API_URL="https://api.bpjs.co.id"
 BPJS_EMAIL="bpjs@menkes.co.id"
+
+# QZ Tray Message Signing and Certificate
+QZ_TRAY_PRIVATE_KEY_PATH=/env/www/qztray/private.pem
+QZ_TRAY_CERTIFICATE_PATH=/env/www/qztray/certificate.txt
 ```
 
 Then generate the application key:
@@ -115,8 +119,7 @@ QZ Tray is used to print receipts, prescriptions, and labels directly to a local
    👉 [https://qz.io/download/](https://qz.io/download/)
 2. Launch QZ Tray — it should run in your system tray.
 3. Ensure the HIS web app can connect to QZ Tray (the browser may ask for permission).
-
-📝 Note : QZ Tray certificate and message signing is not supported
+4. Get a certificate and private key or sign it yourself.
 
 ---
 
