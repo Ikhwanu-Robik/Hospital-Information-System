@@ -3,62 +3,83 @@
 namespace App\Services;
 
 use Carbon\Carbon;
-use Illuminate\Support\Facades\Http;
 use Stripe\Invoice;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Http\Client\Response;
+use Illuminate\Support\Facades\Http;
 
 class BPJS
 {
     private $NIK;
 
-    /**
-     * Check the BPJS membership of a citizen with the given NIK.
-     * Returns true if the the citizen has an active BPJS membership.
-     * Returns false if the citizen does not have a BPJS membership or if
-     * the membership is no longer active.
-     * 
-     * @param mixed $NIK
-     * @return bool
-     */
-    public function validatePatient($NIK)
+    public function validateMembership(array $patient)
     {
-        $response = Http::withHeader('Authorization', "Cons-Id " . config('bpjs.cons_id'))
-            ->post(config('bpjs.api_url') . '/bpjs/check', [
-                'NIK' => $NIK
-            ]);
+        $isMember = $patient["member"];
+        $isActive = $this->isPatientMembershipActive($patient);
+        return $isMember && $isActive;
+    }
 
+    private function isPatientMembershipActive(array $patient)
+    {
+        $membershipExpirationDate = Carbon::createFromFormat("d-m-Y", $patient["active_until"]);
+        $isActive = $membershipExpirationDate->greaterThan(now());
+        return $isActive;
+    }
+
+    public function getPatient(string $NIK)
+    {
+        $patient = $this->callBPJSAPI('/bpjs/check', ['NIK' => $NIK]);
+        return $patient;
+    }
+
+    private function callBPJSAPI(string $path, array $data)
+    {
+        $response = $this->makeRequest($path, $data);
+        return $this->handleResponse($response);
+    }
+
+    private function makeRequest(string $path, array $data)
+    {
+        $consId = "Cons-Id " . config('bpjs.cons_id');
+        $url = config('bpjs.api_url') . $path;
+        $response = Http::withHeader('Authorization', $consId)
+            ->post($url, $data);
+        return $response;
+    }
+
+    private function handleResponse(Response $response)
+    {
         if ($response->failed()) {
             abort($response->getStatusCode(), $response->body());
         }
-
-        $responseArr = $response->json();
-        $isMember = $responseArr["member"];
-        $isActive = false;
-        if ($isMember) {
-            $membershipExpirationDate = Carbon::createFromFormat("d-m-Y", $responseArr["active_until"]);
-            $isActive = $membershipExpirationDate->greaterThan(now());
-        }
-
-        return $isMember && $isActive;
+        return $response->json();
     }
 
     public function sendInvoice(Invoice $invoice)
     {
-        $response = Http::withHeader('Authorization', "Cons-Id " . config('bpjs.cons_id'))
-            ->post(config('bpjs.api_url') . '/bpjs/bill', [
-                'NIK' => $this->NIK,
-                'invoice_payment_link' => $invoice->hosted_invoice_url,
-                'invoice_pdf_link' => $invoice->invoice_pdf
-            ]);
-
-        if ($response->failed()) {
-            abort($response->getStatusCode(), $response->body());
+        if (!isset($this->NIK)) {
+            $this->log("The NIK is not set", "sendInvoice");
+            abort(500);
         }
+
+        $this->callBPJSAPI('/bpjs/bill', [
+            'NIK' => $this->NIK,
+            'invoice_payment_link' => $invoice->hosted_invoice_url,
+            'invoice_pdf_link' => $invoice->invoice_pdf
+        ]);
     }
 
-    public function setPatientNIK($NIK)
+    public function setPatientNIK(string $NIK)
     {
         $this->NIK = $NIK;
-
         return $this;
+    }
+
+    private function log($message, $originFunction)
+    {
+        Log::info($message, [
+            "class" => "App\\Services\\BPJS",
+            "function" => $originFunction
+        ]);
     }
 }

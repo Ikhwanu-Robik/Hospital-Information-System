@@ -39,7 +39,8 @@ class SellMedicineController extends CrudController
         $medicalRecord = PrescriptionRecord::with('medicalRecord.patient')
             ->find($buyMedicineRequest->validated('id'))->medicalRecord;
 
-        $patientHasActiveBPJS = BPJS::validatePatient($medicalRecord->patient->NIK);
+        $bpjsPatient = BPJS::getPatient($medicalRecord->patient->NIK);
+        $patientHasActiveBPJS = BPJS::validateMembership($bpjsPatient);
 
         $lineItems = $prescriptionRecord->prescriptionMedicines->map(fn($pm) => [
             'price' => $pm->medicine->stripe_price_id,
