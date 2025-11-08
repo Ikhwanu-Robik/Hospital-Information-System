@@ -221,8 +221,6 @@ class CheckUpController extends Controller
 
     public function setQueueNumberDefaultPrinter(Request $request)
     {
-        // TODO: validate the printer's name
-        // would love to validate, but don't know how
         $validated = $request->validate([
             'printer' => 'required'
         ]);

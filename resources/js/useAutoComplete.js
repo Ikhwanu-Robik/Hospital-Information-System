@@ -73,12 +73,36 @@ document
     .getElementById("add_prescription_button")
     .addEventListener("click", addPrescriptionForm);
 
-function createPrescriptionFieldsDiv() {
-    // Create the wrapper div
-    const prescriptionDiv = document.createElement("div");
-    prescriptionDiv.className = "prescription";
+function createPrescriptionFields() {
+    const wrapperDiv = createWrapperDiv();
 
-    // Create the div for @algolia/autocomplete to put the dynamic input
+    // medicineNameInput is to search the medicine by name,
+    // medicineIdInput holds the id of the searched
+    // medicine name and is the one to be sent to the server
+    const medicineNameInput = createMedicineNameInput();
+    const medicineIdInput = createMedicineIdInput();
+    const doseInput = createDoseInput();
+    const frequencyInput = createFrequencyInput();
+
+    // do not reorder,
+    // the code inside addPrescriptionForm()
+    // depends on this order
+    wrapperDiv.appendChild(medicineNameInput);
+    wrapperDiv.appendChild(medicineIdInput);
+    wrapperDiv.appendChild(doseInput);
+    wrapperDiv.appendChild(frequencyInput);
+
+    return wrapperDiv;
+}
+
+function createWrapperDiv() {
+    const wrapperDiv = document.createElement("div");
+    wrapperDiv.className = "prescription";
+
+    return wrapperDiv;
+}
+
+function createMedicineNameInput() {
     const medicineInputDiv = document.createElement("div");
     medicineInputDiv.id = "medicine_div";
     medicineInputDiv.style.display = "inline";
@@ -88,14 +112,21 @@ function createPrescriptionFieldsDiv() {
 
     medicineInputDiv.appendChild(medicineLabel);
 
-    // Create the input for medicine_id that will mirror
-    // the selected medicine from algolia's generated input
+    return medicineInputDiv;
+}
+
+function createMedicineIdInput() {
     const medicineIdInput = document.createElement("input");
     medicineIdInput.type = "hidden";
     medicineIdInput.name = "medicine_id[]";
     medicineIdInput.id = "medicine_id";
 
-    // Label + input for Dose
+    return medicineIdInput;
+}
+
+function createDoseInput() {
+    const doseInputDiv = document.createElement("div");
+
     const doseLabel = document.createElement("label");
     doseLabel.setAttribute("for", "dose");
     doseLabel.textContent = "Dose";
@@ -105,7 +136,15 @@ function createPrescriptionFieldsDiv() {
     doseInput.name = "dose_amount[]";
     doseInput.id = "dose";
 
-    // Label + input for Frequency
+    doseInputDiv.appendChild(doseLabel);
+    doseInputDiv.appendChild(doseInput);
+
+    return doseInputDiv;
+}
+
+function createFrequencyInput() {
+    const frequencyInputDiv = document.createElement("div");
+
     const frequencyLabel = document.createElement("label");
     frequencyLabel.setAttribute("for", "frequency");
     frequencyLabel.textContent = "Frequency";
@@ -115,25 +154,23 @@ function createPrescriptionFieldsDiv() {
     frequencyInput.name = "frequency[]";
     frequencyInput.id = "frequency";
 
-    // Append elements to the wrapper div
-    prescriptionDiv.appendChild(medicineInputDiv);
-    prescriptionDiv.appendChild(medicineIdInput);
-    prescriptionDiv.appendChild(doseLabel);
-    prescriptionDiv.appendChild(doseInput);
-    prescriptionDiv.appendChild(frequencyLabel);
-    prescriptionDiv.appendChild(frequencyInput);
+    frequencyInputDiv.appendChild(frequencyLabel);
+    frequencyInputDiv.appendChild(frequencyInput);
 
-    applyAutocomplete(medicineInputDiv, medicineIdInput);
-
-    return prescriptionDiv;
+    return frequencyInputDiv;
 }
 
 function addPrescriptionForm(event) {
     event.preventDefault();
     event.stopPropagation();
 
+    let prescriptionFields = createPrescriptionFields();
+    let medicineNameInput = prescriptionFields.childNodes[0];
+    let medicineIdInput = prescriptionFields.childNodes[1];
+    applyAutocomplete(medicineNameInput, medicineIdInput);
+
     let prescriptionFieldsContainer = document.getElementById(
         "prescription-fields-container"
     );
-    prescriptionFieldsContainer.appendChild(createPrescriptionFieldsDiv());
+    prescriptionFieldsContainer.appendChild(prescriptionFields);
 }

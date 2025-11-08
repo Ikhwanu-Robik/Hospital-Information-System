@@ -26,51 +26,53 @@ window.Echo.channel(`Medicine.Dispense.${prescriptionRecordId}`).listen(
     }
 );
 
-// this is a fallback function to be called in case
-// the event is broadcasted before this page finished loading
-setTimeout(async () => {
-    if (!isStripePaymentProcessedBroadcasted) {
-        try {
-            let response = await fetch(
-                `http://127.0.0.1:8000/prescriptions/${prescriptionRecordId}`,
-                {
-                    method: "GET",
-                    headers: {
-                        "X-Requested-With": "XMLHttpRequest",
-                        "X-CSRF-TOKEN": document.querySelector(
-                            'meta[name="csrf-token"]'
-                        ).content,
-                    },
-                    credentials: "same-origin",
-                }
-            );
+setTimeout(isBroadcastMissed(), 5000);
 
-            if (!response.ok) {
-                Swal.fire({
-                    title: "Error fetching prescriptions status",
-                    icon: "error",
-                    text: response.statusText,
-                });
+function isBroadcastMissed() {
+    if (!isStripePaymentProcessedBroadcasted) missBroadcastFallback();
+}
 
-                console.error(await response.json());
-            } else {
-                let body = await response.json();
-                let paymentStatusIcon =
-                    body.payment_status == "SUCCESSFUL" ? "success" : "error";
-
-                Swal.fire({
-                    title: `Payment ${body.payment_status}`,
-                    icon: paymentStatusIcon,
-                    text: "you are good to leave this page 👌",
-                });
-
-                document.getElementById("payment-status-msg").textContent =
-                    "Payment " + body.payment_status;
-                document.getElementById("payment-desc-msg").textContent =
-                    "You are good to leave this page 👌";
+async function missBroadcastFallback() {
+    try {
+        let response = await fetch(
+            `http://127.0.0.1:8000/prescriptions/${prescriptionRecordId}`,
+            {
+                method: "GET",
+                headers: {
+                    "X-Requested-With": "XMLHttpRequest",
+                    "X-CSRF-TOKEN": document.querySelector(
+                        'meta[name="csrf-token"]'
+                    ).content,
+                },
+                credentials: "same-origin",
             }
-        } catch (e) {
-            console.error(e);
+        );
+
+        if (!response.ok) {
+            Swal.fire({
+                title: "Error fetching prescriptions status",
+                icon: "error",
+                text: response.statusText,
+            });
+
+            console.error(await response.json());
+        } else {
+            let body = await response.json();
+            let paymentStatusIcon =
+                body.payment_status == "SUCCESSFUL" ? "success" : "error";
+
+            Swal.fire({
+                title: `Payment ${body.payment_status}`,
+                icon: paymentStatusIcon,
+                text: "you are good to leave this page 👌",
+            });
+
+            document.getElementById("payment-status-msg").textContent =
+                "Payment " + body.payment_status;
+            document.getElementById("payment-desc-msg").textContent =
+                "You are good to leave this page 👌";
         }
+    } catch (e) {
+        console.error(e);
     }
-}, 5000);
+}

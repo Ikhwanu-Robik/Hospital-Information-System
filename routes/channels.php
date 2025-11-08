@@ -8,7 +8,6 @@ use App\Models\DoctorSchedule;
 use Illuminate\Support\Facades\Broadcast;
 
 Broadcast::channel('CheckUp.Doctors.{doctorProfile}', function ($user, DoctorProfile $doctorProfile) {
-    // TODO: see if I can check the patient's permission
     $now = now();
     $isDoctorInSchedule = DoctorSchedule::where('doctor_profile_id', $doctorProfile->id)
         ->where('day_of_week', $now->dayName)
@@ -22,7 +21,7 @@ Broadcast::channel('CheckUp.Doctors.{doctorProfile}', function ($user, DoctorPro
 
     if ($doctorProfile->user->can('accept patient') && $isDoctorInSchedule) {
         if ($isDoctorBusy) {
-            DoctorIsFree::dispatch($doctorProfile); // ->delay(now()->addSeconds(3))
+            DoctorIsFree::dispatch($doctorProfile);
         }
         return true;
     }

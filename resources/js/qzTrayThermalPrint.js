@@ -1,6 +1,16 @@
 import qz from "qz-tray";
 import Swal from "sweetalert2";
 
+const ESCPOSCommand = {
+    init: "\x1B" + "\x40",
+    line_break: "\x0A",
+    left_align: "\x1B" + "\x61" + "\x30",
+    center_align: "\x1B" + "\x61" + "\x31",
+    bold_on: "\x1B" + "\x45" + "\x0D",
+    bold_off: "\x1B" + "\x45" + "\x0A",
+    cut_paper_old_syntax: "\x1B" + "\x69",
+};
+
 document.addEventListener("DOMContentLoaded", async () => {
     let pageName = document.querySelector('meta[name="page-name"]').content;
 
@@ -105,15 +115,15 @@ async function printQueueNumber(queueNumber) {
         if (printerName != "") {
             let config = qz.configs.create(printerName);
             let data = [
-                "\x1B" + "\x40", // init
-                "\x1B" + "\x61" + "\x31", // center align
+                ESCPOSCommand.init,
+                ESCPOSCommand.center_align,
                 "QUEUE NO.",
-                "\x0A", // line break
-                "\x1B" + "\x45" + "\x0D", // bold on
+                ESCPOSCommand.line_break,
+                ESCPOSCommand.bold_on,
                 queueNumber,
-                "\x1B" + "\x45" + "\x0A", // bold off
-                "\x0A", // line break
-                "\x1B" + "\x69", // cut paper (old syntax)
+                ESCPOSCommand.bold_off,
+                ESCPOSCommand.line_break,
+                ESCPOSCommand.cut_paper_old_syntax
             ];
 
             await qz.print(config, data);
@@ -153,39 +163,36 @@ async function printMedicinePrescriptions(prescriptions) {
         let patientBirthdate = prescriptions.medical_record.patient.birthdate;
         let patientAge = getAge(patientBirthdate);
 
-        // TODO: change the format of Prescripton to match design
-        // INCLUDE THE PRESCRIPTION CODE
-
         if (printerName != "") {
             let config = qz.configs.create(printerName);
             let data = [
-                "\x1B" + "\x40", // init
+                ESCPOSCommand.init
             ];
 
             data.push(prescriptions.code);
-            data.push("\x0A"); // line break
+            ESCPOSCommand.line_break
 
-            data.push("\x1B" + "\x61" + "\x31"); // center text
+            data.push(ESCPOSCommand.center_align);
             data.push("RESEP OBAT");
             data.push("RS AMAL SEHAT");
-            data.push("\x0A"); // line break
-            data.push("\x1B" + "\x61" + "\x30"); // left align
+            data.push(ESCPOSCommand.line_break);
+            data.push(ESCPOSCommand.left_align);
 
             data.push(
                 "dr." + prescriptions.medical_record.doctor_profile.full_name
             );
-            data.push("\x0A"); // line break
+            data.push(ESCPOSCommand.line_break);
 
             data.push(
                 "Untuk:" + prescriptions.medical_record.patient.full_name
             );
-            data.push("\x0A"); // line break
+            data.push(ESCPOSCommand.line_break);
 
             data.push("Usia:" + patientAge);
-            data.push("\x0A"); // line break
+            data.push(ESCPOSCommand.line_break);
 
             data.push("Diagnosis:" + prescriptions.medical_record.diagnosis);
-            data.push("\x0A"); // line break
+            data.push(ESCPOSCommand.line_break);
 
             prescriptions.prescription_medicines.forEach((prescription) => {
                 let medicineName = prescription.medicine.name;
@@ -193,9 +200,9 @@ async function printMedicinePrescriptions(prescriptions) {
                 let frequency = prescription.frequency;
 
                 data.push(medicineName + " x " + quantity + " | " + frequency);
-                data.push("\x0A"); // line break
+                data.push(ESCPOSCommand.line_break);
             });
-            data.push("\x1B" + "\x69"); // cut paper (old syntax)
+            data.push(ESCPOSCommand.cut_paper_old_syntax);
 
             await qz.print(config, data);
         } else {

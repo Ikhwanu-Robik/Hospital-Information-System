@@ -8,6 +8,8 @@ Route::get('/login', function () {
     return view('login-form');
 })->name('login');
 
+// this login function is currently only used by doctor
+// since the other roles use Backpack's login controller
 Route::post('/login', function (Request $request) {
     $validated = $request->validate([
         'email' => 'required|email',
@@ -22,9 +24,9 @@ Route::post('/login', function (Request $request) {
         } else if ($user->hasRole('doctor')) {
             return redirect()->route('doctor.diagnosis-form');
         }
-        // other roles are not redirected here because 
-        // they use backpack's login system
-        // and therefore a different login controller
+        // TODO: move other roles login into this function
+        // that is, move them away from Backpack's login controller
+        // TODO: convert this function into a Controller
     }
 })->name('login.action');
 

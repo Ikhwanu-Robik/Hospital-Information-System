@@ -54,7 +54,11 @@ async function fetchMedicalRecords(patient) {
 }
 
 function fillPatientData(queueId, patient, medicalRecords) {
-    // fill the patient's data
+    fillBiodata(queueId, patient);
+    fillMedicalRecordData(medicalRecords);
+}
+
+function fillBiodata(queueId, patient) {
     let queueIdInput = document.querySelector('input[name="queue_id"]');
     queueIdInput.value = queueId;
 
@@ -92,7 +96,9 @@ function fillPatientData(queueId, patient, medicalRecords) {
     let bpjs_number = document.getElementById("BPJS_number");
     bpjs_number.textContent =
         patient.BPJS_number != null ? patient.BPJS_number : "no";
+}
 
+function fillMedicalRecordData() {
     // fill the patient's medical records
     let medicalRecordsTableBody = document.getElementById(
         "medical-records-tbody"
