@@ -4,74 +4,24 @@ import { autocomplete } from "@algolia/autocomplete-js";
 let medicines = document.querySelector('meta[name="medicines"]').content;
 const items = JSON.parse(medicines);
 
-function applyAutocomplete(elementDisplay, elementData) {
-    autocomplete({
-        container: elementDisplay,
-        placeholder: "Medicine name",
-        classNames: {
-            root: "aa-inline-root",
-            form: "aa-inline-form",
-            input: "aa-inline-input",
-            submitButton: "aa-hide-button",
-        },
-        defaultActiveItemId: 0,
-        getSources({ query }) {
-            return [
-                {
-                    sourceId: "suggestions",
-                    getItems() {
-                        return items.filter(({ name }) =>
-                            name.toLowerCase().includes(query.toLowerCase())
-                        );
-                    },
-                    templates: {
-                        item({ item }) {
-                            return `${item.name}`;
-                        },
-                        noResults() {
-                            return "No medicine matching.";
-                        },
-                    },
-                    onSelect({ item, setQuery }) {
-                        setQuery(item.name);
-                        elementData.value = item.id;
-                        removeWarningLabel(elementData.parentElement);
-                    },
-                },
-            ];
-        },
-        onStateChange() {
-            elementData.value = "";
-            if (elementData.value == "") {
-                let warningLabel = document.createElement("label");
-                warningLabel.style = "color: red";
-                warningLabel.className = "select-medicine-warning-label";
-                warningLabel.textContent =
-                    "you must select a medicine from the suggestion list";
-
-                removeWarningLabel(elementData.parentElement);
-
-                elementData.parentElement.prepend(warningLabel);
-            }
-        },
-    });
-}
-
-function removeWarningLabel(parent) {
-    let warningLabel = null;
-    for (const child of parent.children) {
-        if (child.className == "select-medicine-warning-label") {
-            warningLabel = child;
-        }
-    }
-    if (warningLabel != null) {
-        parent.removeChild(warningLabel);
-    }
-}
-
 document
     .getElementById("add_prescription_button")
     .addEventListener("click", addPrescriptionForm);
+
+function addPrescriptionForm(event) {
+    event.preventDefault();
+    event.stopPropagation();
+
+    let prescriptionFields = createPrescriptionFields();
+    let medicineNameInput = prescriptionFields.childNodes[0];
+    let medicineIdInput = prescriptionFields.childNodes[1];
+    applyAutocomplete(medicineNameInput, medicineIdInput);
+
+    let prescriptionFieldsContainer = document.getElementById(
+        "prescription-fields-container"
+    );
+    prescriptionFieldsContainer.appendChild(prescriptionFields);
+}
 
 function createPrescriptionFields() {
     const wrapperDiv = createWrapperDiv();
@@ -160,17 +110,69 @@ function createFrequencyInput() {
     return frequencyInputDiv;
 }
 
-function addPrescriptionForm(event) {
-    event.preventDefault();
-    event.stopPropagation();
+function applyAutocomplete(elementDisplay, elementData) {
+    autocomplete({
+        container: elementDisplay,
+        placeholder: "Medicine name",
+        classNames: {
+            root: "aa-inline-root",
+            form: "aa-inline-form",
+            input: "aa-inline-input",
+            submitButton: "aa-hide-button",
+        },
+        defaultActiveItemId: 0,
+        getSources({ query }) {
+            return [
+                {
+                    sourceId: "suggestions",
+                    getItems() {
+                        return items.filter(({ name }) =>
+                            name.toLowerCase().includes(query.toLowerCase())
+                        );
+                    },
+                    templates: {
+                        item({ item }) {
+                            return `${item.name}`;
+                        },
+                        noResults() {
+                            return "No medicine matching.";
+                        },
+                    },
+                    onSelect({ item, setQuery }) {
+                        setQuery(item.name);
+                        elementData.value = item.id;
+                        removeWarningLabel(elementData.parentElement);
+                    },
+                },
+            ];
+        },
+        onStateChange() {
+            elementData.value = "";
+            if (elementData.value == "") {
+                let warningLabel = document.createElement("label");
+                warningLabel.style = "color: red";
+                warningLabel.className = "select-medicine-warning-label";
+                warningLabel.textContent =
+                    "you must select a medicine from the suggestion list";
 
-    let prescriptionFields = createPrescriptionFields();
-    let medicineNameInput = prescriptionFields.childNodes[0];
-    let medicineIdInput = prescriptionFields.childNodes[1];
-    applyAutocomplete(medicineNameInput, medicineIdInput);
+                removeWarningLabel(elementData.parentElement);
 
-    let prescriptionFieldsContainer = document.getElementById(
-        "prescription-fields-container"
-    );
-    prescriptionFieldsContainer.appendChild(prescriptionFields);
+                elementData.parentElement.prepend(warningLabel);
+            }
+        },
+    });
+}
+
+function removeWarningLabel(parent) {
+    let warningLabel = null;
+
+    for (const child of parent.children) {
+        if (child.className == "select-medicine-warning-label") {
+            warningLabel = child;
+        }
+    }
+    
+    if (warningLabel != null) {
+        parent.removeChild(warningLabel);
+    }
 }

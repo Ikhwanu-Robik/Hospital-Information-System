@@ -58,17 +58,6 @@ function setSecurity() {
     });
 }
 
-document
-    .querySelector("button#printButton")
-    .addEventListener("click", async () => {
-        await startConnection();
-        let prescriptions = JSON.parse(
-            document.querySelector('meta[name="prescriptions"]').content
-        );
-        await printMedicinePrescriptions(prescriptions);
-        await closeConnection();
-    });
-
 async function startConnection() {
     try {
         if (!qz.websocket.isActive()) {
@@ -85,14 +74,6 @@ async function closeConnection() {
     }
 }
 
-function populatePrintSelect(printers) {
-    let optionsHTML = "";
-    for (let i = 0; i < printers.length; i++) {
-        optionsHTML += `<option value="${printers[i]}">${printers[i]}</option>`;
-    }
-    document.querySelector("select#printers").innerHTML = optionsHTML;
-}
-
 async function allPrinters() {
     try {
         const printers = await qz.printers.find();
@@ -102,11 +83,12 @@ async function allPrinters() {
     }
 }
 
-function getQueueAppPrinter() {
-    let printerName = document.querySelector(
-        'meta[name="printer-name"]'
-    ).content;
-    return printerName;
+function populatePrintSelect(printers) {
+    let optionsHTML = "";
+    for (let i = 0; i < printers.length; i++) {
+        optionsHTML += `<option value="${printers[i]}">${printers[i]}</option>`;
+    }
+    document.querySelector("select#printers").innerHTML = optionsHTML;
 }
 
 async function printQueueNumber(queueNumber) {
@@ -123,7 +105,7 @@ async function printQueueNumber(queueNumber) {
                 queueNumber,
                 ESCPOSCommand.bold_off,
                 ESCPOSCommand.line_break,
-                ESCPOSCommand.cut_paper_old_syntax
+                ESCPOSCommand.cut_paper_old_syntax,
             ];
 
             await qz.print(config, data);
@@ -137,6 +119,13 @@ async function printQueueNumber(queueNumber) {
     } catch (e) {
         console.error(e);
     }
+}
+
+function getQueueAppPrinter() {
+    let printerName = document.querySelector(
+        'meta[name="printer-name"]'
+    ).content;
+    return printerName;
 }
 
 function getAge(dateString) {
@@ -165,12 +154,10 @@ async function printMedicinePrescriptions(prescriptions) {
 
         if (printerName != "") {
             let config = qz.configs.create(printerName);
-            let data = [
-                ESCPOSCommand.init
-            ];
+            let data = [ESCPOSCommand.init];
 
             data.push(prescriptions.code);
-            ESCPOSCommand.line_break
+            ESCPOSCommand.line_break;
 
             data.push(ESCPOSCommand.center_align);
             data.push("RESEP OBAT");
@@ -216,3 +203,14 @@ async function printMedicinePrescriptions(prescriptions) {
         console.error(e);
     }
 }
+
+document
+    .querySelector("button#printButton")
+    .addEventListener("click", async () => {
+        await startConnection();
+        let prescriptions = JSON.parse(
+            document.querySelector('meta[name="prescriptions"]').content
+        );
+        await printMedicinePrescriptions(prescriptions);
+        await closeConnection();
+    });
