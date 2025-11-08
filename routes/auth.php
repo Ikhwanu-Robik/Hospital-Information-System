@@ -15,6 +15,7 @@ Route::post('/login', function (Request $request) {
         'email' => 'required|email',
         'password' => 'required'
     ]);
+    
     if (Auth::attempt($validated)) {
         $intendedUrl = session()->get('url.intended');
         $user = Auth::user();

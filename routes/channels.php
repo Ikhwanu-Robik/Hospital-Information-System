@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Broadcast;
 
 Broadcast::channel('CheckUp.Doctors.{doctorProfile}', function ($user, DoctorProfile $doctorProfile) {
     $now = now();
+    
     $isDoctorInSchedule = DoctorSchedule::where('doctor_profile_id', $doctorProfile->id)
         ->where('day_of_week', $now->dayName)
         ->where('start_time', '<=', $now->format('H:i:s'))
