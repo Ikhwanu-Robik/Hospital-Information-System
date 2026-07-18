@@ -15,6 +15,9 @@ class BPJS
     public function validateMembership(array $patient)
     {
         $isMember = $patient["member"];
+        if (!$isMember) {
+            return false;
+        }
         $isActive = $this->isPatientMembershipActive($patient);
         return $isMember && $isActive;
     }
