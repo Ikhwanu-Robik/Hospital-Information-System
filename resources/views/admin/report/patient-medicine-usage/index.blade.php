@@ -182,7 +182,7 @@
 
 @push('after_scripts')
     {{-- Example: Using Chart.js for quick visualizations --}}
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="{{ '/chart.umd.min.js' }}"></script>
     <script>
         // Example placeholder dataset for Gender
         const dispensionsPerMonth = JSON.parse(document.querySelector('meta[name="dispensions-per-month"]').content);

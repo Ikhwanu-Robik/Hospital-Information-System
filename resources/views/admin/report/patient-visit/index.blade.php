@@ -194,7 +194,7 @@
 
 @push('after_scripts')
     {{-- Example: Using Chart.js for quick visualizations --}}
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="{{ '/chart.umd.min.js' }}"></script>
     <script>
         const reportByGender = JSON.parse(document.querySelector('meta[name="report-by-gender"]').content);
         const reportByAgeGroup = JSON.parse(document.querySelector('meta[name="report-by-age-group"]').content);
