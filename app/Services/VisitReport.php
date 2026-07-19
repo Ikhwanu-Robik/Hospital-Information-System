@@ -351,13 +351,13 @@ class VisitReport
 
     private function getReportOverTime()
     {
-        $medicalRecords = MedicalRecord::selectRaw('MONTHNAME(created_at) as month, COUNT(*) as record_count')
-            ->whereYear('created_at', now()->year)
-            ->groupBy(DB::raw('MONTH(created_at)'), DB::raw('MONTHNAME(created_at)'))
-            ->orderBy(DB::raw('MONTH(created_at)'))
+        $medicalRecords = MedicalRecord::selectRaw("DATE_FORMAT(created_at, \"%M %Y\") as month_year, COUNT(*) as record_count")
+            ->whereYear('created_at', '<=', now()->year)
+            ->groupBy('month_year')
+            ->orderBy('month_year')
             ->get();
 
-        $monthLabel = $medicalRecords->pluck('month')->toArray();
+        $monthLabel = $medicalRecords->pluck('month_year')->toArray();
         $monthlyData = $medicalRecords->pluck('record_count')->toArray();
 
         $reportOverTime = [
