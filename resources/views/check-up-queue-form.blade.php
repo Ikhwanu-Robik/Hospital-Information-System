@@ -22,7 +22,7 @@
             <div class="mb-3">
                 <label for="medical_record_number" class="form-label">Medical Record Number</label>
                 <input type="text" name="medical_record_number" id="medical_record_number"
-                    placeholder="Contoh : MRN-2025-000001" class="form-control" />
+                    placeholder="Contoh : MRN-2025-000001" class="form-control" value="{{ old('medical_record_number') }}"/>
             </div>
 
             <label for="medical_record_number" class="form-label">Choose Doctor Specialization</label>
