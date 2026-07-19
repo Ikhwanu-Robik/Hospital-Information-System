@@ -125,13 +125,13 @@ class MedicineUsageReport
     {
         if ($this->date) {
             $prescriptionMedicines = PrescriptionMedicine::whereDate('created_at', $this->date)
-                ->selectRaw('MONTHNAME(created_at) as month, COUNT(*) as record_count')
-                ->whereYear('created_at', now()->year)
-                ->groupBy(DB::raw('MONTH(created_at)'), DB::raw('MONTHNAME(created_at)'))
-                ->orderBy(DB::raw('MONTH(created_at)'))
+                ->selectRaw('DATE_FORMAT(created_at, \'%M %Y\') as month_year, COUNT(*) as record_count')
+                ->whereYear('created_at', '<=', now()->year)
+                ->groupBy('month_year')
+                ->orderBy('month_year')
                 ->get();
 
-            $monthLabel = $prescriptionMedicines->pluck('month')->toArray();
+            $monthLabel = $prescriptionMedicines->pluck('month_year')->toArray();
             $monthlyData = $prescriptionMedicines->pluck('record_count')->toArray();
 
             $dispensionsPerMonth = [
@@ -141,13 +141,13 @@ class MedicineUsageReport
         } else if ($this->from && $this->to) {
             $prescriptionMedicines = PrescriptionMedicine::whereDate('created_at', '>=', $this->from)
                 ->whereDate('created_at', '<=', $this->to)
-                ->selectRaw('MONTHNAME(created_at) as month, COUNT(*) as record_count')
-                ->whereYear('created_at', now()->year)
-                ->groupBy(DB::raw('MONTH(created_at)'), DB::raw('MONTHNAME(created_at)'))
-                ->orderBy(DB::raw('MONTH(created_at)'))
+                ->selectRaw('DATE_FORMAT(created_at, \'%M %Y\') as month_year, COUNT(*) as record_count')
+                ->whereYear('created_at', '<=', now()->year)
+                ->groupBy('month_year')
+                ->orderBy('month_year')
                 ->get();
 
-            $monthLabel = $prescriptionMedicines->pluck('month')->toArray();
+            $monthLabel = $prescriptionMedicines->pluck('month_year')->toArray();
             $monthlyData = $prescriptionMedicines->pluck('record_count')->toArray();
 
             $dispensionsPerMonth = [
@@ -157,10 +157,10 @@ class MedicineUsageReport
         } else {
             $this->date = today();
             $prescriptionMedicines = PrescriptionMedicine::whereDate('created_at', $this->date)
-                ->selectRaw('MONTHNAME(created_at) as month, COUNT(*) as record_count')
-                ->whereYear('created_at', now()->year)
-                ->groupBy(DB::raw('MONTH(created_at)'), DB::raw('MONTHNAME(created_at)'))
-                ->orderBy(DB::raw('MONTH(created_at)'))
+                ->selectRaw('DATE_FORMAT(created_at, \'%M %Y\') as month_year, COUNT(*) as record_count')
+                ->whereYear('created_at', '<=', now()->year)
+                ->groupBy('month_year')
+                ->orderBy('month_year')
                 ->get();
 
             $monthLabel = $prescriptionMedicines->pluck('month')->toArray();
