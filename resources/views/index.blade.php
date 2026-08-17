@@ -25,7 +25,7 @@
             background: white;
             border-radius: 12px;
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
-            max-width: 600px;
+            max-width: 60vw;
             width: 100%;
             padding: 60px 40px;
             text-align: center;
@@ -62,9 +62,8 @@
         }
 
         .btn {
-            flex: 1;
-            min-width: 200px;
-            padding: 16px 32px;
+            width: 13rem;
+            height: 13rem;
             font-size: 16px;
             font-weight: 600;
             border: none;
@@ -86,106 +85,59 @@
             box-shadow: 0 10px 25px rgba(0, 102, 204, 0.3);
         }
 
-        .btn-staff {
-            background-color: #00a86b;
+        .btn-locket {
+            background-color: #0ecc00;
             color: white;
         }
 
-        .btn-staff:hover {
-            background-color: #008856;
+        .btn-locket:hover {
+            background-color: #087400;
             transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(0, 168, 107, 0.3);
+            box-shadow: 0 10px 25px rgba(0, 102, 204, 0.3);
         }
 
-        /* Modal Styles */
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1000;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            animation: fadeIn 0.3s ease;
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-            }
-            to {
-                opacity: 1;
-            }
-        }
-
-        .modal-content {
-            background-color: white;
-            margin: 10% auto;
-            padding: 40px;
-            border-radius: 12px;
-            width: 90%;
-            max-width: 500px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-            animation: slideIn 0.3s ease;
-        }
-
-        @keyframes slideIn {
-            from {
-                transform: translateY(-50px);
-                opacity: 0;
-            }
-            to {
-                transform: translateY(0);
-                opacity: 1;
-            }
-        }
-
-        .close {
-            color: #aaa;
-            float: right;
-            font-size: 28px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: color 0.3s ease;
-        }
-
-        .close:hover {
-            color: #000;
-        }
-
-        .modal h2 {
-            color: #1a3a52;
-            margin-bottom: 30px;
-            font-size: 24px;
-        }
-
-        .staff-buttons {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-        }
-
-        .staff-btn {
-            padding: 20px;
-            background-color: #f0f4f8;
-            border: 2px solid #e0e8f0;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 14px;
-            font-weight: 600;
-            color: #1a3a52;
-            transition: all 0.3s ease;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .staff-btn:hover {
-            background-color: #00a86b;
+        .btn-doctor {
+            background-color: #00b1cc;
             color: white;
-            border-color: #00a86b;
+        }
+
+        .btn-doctor:hover {
+            background-color: rgb(0, 65, 130);
             transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(0, 168, 107, 0.2);
+            box-shadow: 0 10px 25px rgba(0, 102, 204, 0.3);
+        }
+
+        .btn-admin {
+            background-color: #6d00cc;
+            color: white;
+        }
+
+        .btn-admin:hover {
+            background-color: #4a008b;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0, 102, 204, 0.3);
+        }
+
+        .btn-pharmacist {
+            background-color: #cc0000;
+            color: white;
+        }
+
+        .btn-pharmacist:hover {
+            background-color: #9a0000;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0, 102, 204, 0.3);
+        }
+
+        .btn-sysadmin {
+            background-color: #998410;
+            color: white;
+        }
+
+        .btn-sysadmin:hover {
+            background-color: #695b0b;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0, 102, 204, 0.3);
         }
 
         @media (max-width: 600px) {
@@ -204,15 +156,6 @@
             .btn {
                 min-width: 100%;
             }
-
-            .staff-buttons {
-                grid-template-columns: 1fr;
-            }
-
-            .modal-content {
-                margin: 30% auto;
-                padding: 30px 20px;
-            }
         }
     </style>
 </head>
@@ -226,41 +169,24 @@
 
         <div class="button-group">
             <button class="btn btn-patient" onclick="handlePatientClick()">Patient</button>
-            <button class="btn btn-staff" onclick="openStaffModal()">Staff</button>
-        </div>
-    </div>
-
-    <!-- Staff Modal -->
-    <div id="staffModal" class="modal">
-        <div class="modal-content">
-            <span class="close" onclick="closeStaffModal()">&times;</span>
-            <h2>Select Staff Type</h2>
-            <div class="staff-buttons">
-                <button class="staff-btn" onclick="handleStaffSelection('Doctor')">Doctor</button>
-                <button class="staff-btn" onclick="handleStaffSelection('Administration Officer')">Administration Officer</button>
-                <button class="staff-btn" onclick="handleStaffSelection('Pharmacist')">Pharmacist</button>
-                <button class="staff-btn" onclick="handleStaffSelection('Sysadmin')">Sysadmin</button>
-            </div>
+            <button class="btn btn-locket" onclick="handleStaffSelection('Queue Locket Process Display')">Queue Locket Process Display</button>
+            <button class="btn btn-doctor" onclick="handleStaffSelection('Doctor')">Doctor</button>
+            <button class="btn btn-admin" onclick="handleStaffSelection('Administration Officer')">Administration Officer</button>
+            <button class="btn btn-pharmacist" onclick="handleStaffSelection('Pharmacist')">Pharmacist</button>
+            <button class="btn btn-sysadmin" onclick="handleStaffSelection('Sysadmin')">Sysadmin</button>
         </div>
     </div>
 
     <script>
-        const staffModal = document.getElementById('staffModal');
-
-        function openStaffModal() {
-            staffModal.style.display = 'block';
-        }
-
-        function closeStaffModal() {
-            staffModal.style.display = 'none';
-        }
-
         function handlePatientClick() {
             window.location.href = "{{ route('check-up-queue-form') }}";
         }
 
         function handleStaffSelection(staffType) {
             switch (staffType) {
+                case 'Queue Locket Process Display':
+                    window.location.href = "{{ route('locket.all') }}";
+                    break;
                 case 'Doctor':
                     window.location.href = "{{ route('doctor.diagnosis-form') }}";
                     break;
@@ -273,15 +199,6 @@
                 case 'Sysadmin':
                     window.location.href = "{{ backpack_url('dashboard') }}";
                     break;
-            }
-
-            closeStaffModal();
-        }
-
-        // Close modal when clicking outside of it
-        window.onclick = function(event) {
-            if (event.target === staffModal) {
-                closeStaffModal();
             }
         }
     </script>
