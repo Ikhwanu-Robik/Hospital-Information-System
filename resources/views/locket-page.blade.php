@@ -18,7 +18,7 @@
     @vite('resources/css/locket-page.css')
 </head>
 
-<body>
+<body style="overflow: hidden">
     <div id="overlay">Click to Start</div>
 
     <nav class="locket-nav">
