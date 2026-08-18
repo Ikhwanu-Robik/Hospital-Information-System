@@ -8,6 +8,10 @@
     },
     "routes": [
         {
+            "src": "/bootstrap.min.css",
+            "dest": "/public/bootstrap.min.css"
+        },
+        {
             "src": "/build/assets/(.*)",
             "dest": "/public/build/assets/$1"
         },
