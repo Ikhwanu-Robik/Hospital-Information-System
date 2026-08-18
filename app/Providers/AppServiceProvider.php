@@ -11,6 +11,7 @@ use App\Services\QZTray;
 use App\Services\Stripe;
 use App\Services\VisitReport;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -75,5 +76,9 @@ class AppServiceProvider extends ServiceProvider
         });
 
         Patient::observe(PatientObserver::class);
+
+        if ($this->app->environment('production')) {
+            URL::forceScheme('https');
+        }
     }
 }
