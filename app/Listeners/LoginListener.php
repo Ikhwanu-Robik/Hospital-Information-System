@@ -4,8 +4,6 @@ namespace App\Listeners;
 
 use App\Models\DoctorOnlineStatus;
 use Illuminate\Auth\Events\Login;
-use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Contracts\Queue\ShouldQueue;
 
 class LoginListener
 {

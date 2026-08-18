@@ -7,8 +7,6 @@ use App\Events\DoctorIsFree;
 use App\Models\CheckUpQueue;
 use App\Events\QueueReadyForBroadcast;
 use App\Events\PatientWishToMeetDoctor;
-use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Contracts\Queue\ShouldQueue;
 
 class DoctorIsFreeListener
 {
