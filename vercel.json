@@ -8,6 +8,10 @@
     },
     "routes": [
         {
+            "src": "/build/assets/(.*)",
+            "dest": "/public/build/assets/$1"
+        },
+        {
             "src": "/(.*)",
             "dest": "/api/index.php"
         }
