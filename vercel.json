@@ -8,6 +8,10 @@
     },
     "routes": [
         {
+            "src": "/vendor/talkify-tts/dist/talkify.min.js",
+            "dest": "/public/vendor/talkify-tts/dist/talkify.min.js"
+        },
+        {
             "src": "/bootstrap.min.css",
             "dest": "/public/bootstrap.min.css"
         },
