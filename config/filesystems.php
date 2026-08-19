@@ -47,6 +47,13 @@ return [
             'report' => false,
         ],
 
+        'public_basset' => [
+            'driver' => 'local',
+            'root' => public_path('basset'),
+            'url' => env('APP_URL') . '/basset',
+            'visibility' => 'public',
+        ],
+
         's3' => [
             'driver' => 's3',
             'key' => env('AWS_ACCESS_KEY_ID'),
