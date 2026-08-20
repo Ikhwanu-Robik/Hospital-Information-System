@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Enums\DoctorStatus;
 use App\Http\Requests\DoctorProfileRequest;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
@@ -81,8 +82,10 @@ class DoctorProfileCrudController extends CrudController
         ]);
         $this->crud->addField([
             'name' => 'status',
-            'type' => 'enum',
-            'enum_class' => "App\Enums\DoctorStatus"
+            'type' => 'select_from_array',
+            'options' => collect(DoctorStatus::cases())->mapWithKeys(
+                fn($enum) => [$enum->value => $enum->name]
+            ),
         ]);
 
         /**

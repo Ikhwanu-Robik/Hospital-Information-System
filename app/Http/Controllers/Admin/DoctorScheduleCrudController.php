@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Enums\Day;
 use App\Http\Requests\DoctorScheduleRequest;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
@@ -69,7 +70,13 @@ class DoctorScheduleCrudController extends CrudController
         CRUD::setFromDb(); // set fields from db columns.
 
         CRUD::field('doctor_profile_id')->type('select')->entity('doctorProfile');
-        CRUD::field('day_of_week')->type('enum');
+        CRUD::addField([
+            'name' => 'day_of_week',
+            'type' => 'select_from_array',
+            'options' => collect(Day::cases())->mapWithKeys(
+                fn($enum) => [$enum->value => $enum->name]
+            )->toArray(),
+        ]);
 
         /**
          * Fields can be defined using the fluent syntax:

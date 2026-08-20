@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Enums\PaymentStatus;
 use App\Http\Requests\PrescriptionRecordRequest;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
@@ -71,7 +72,10 @@ class PrescriptionRecordCrudController extends CrudController
         ]);
         $this->crud->addField([
             'name' => 'payment_status',
-            'type' => 'enum'
+            'type' => 'select_from_array',
+            'options' => collect(PaymentStatus::cases())->mapWithKeys(
+                fn($enum) => [$enum->value => $enum->name]
+            )->toArray(),
         ]);
 
         /**
