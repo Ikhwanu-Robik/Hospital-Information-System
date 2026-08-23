@@ -123,53 +123,104 @@ class MedicineUsageReport
 
     public function getDispensionsPerMonth()
     {
-        if ($this->date) {
-            $prescriptionMedicines = PrescriptionMedicine::whereDate('created_at', $this->date)
-                ->selectRaw('DATE_FORMAT(created_at, \'%M %Y\') as month_year, COUNT(*) as record_count')
-                ->whereYear('created_at', '<=', now()->year)
-                ->groupBy('month_year')
-                ->orderBy('month_year')
-                ->get();
-
-            $monthLabel = $prescriptionMedicines->pluck('month_year')->toArray();
-            $monthlyData = $prescriptionMedicines->pluck('record_count')->toArray();
-
-            $dispensionsPerMonth = [
-                "label" => $monthLabel,
-                "data" => $monthlyData
-            ];
-        } else if ($this->from && $this->to) {
-            $prescriptionMedicines = PrescriptionMedicine::whereDate('created_at', '>=', $this->from)
-                ->whereDate('created_at', '<=', $this->to)
-                ->selectRaw('DATE_FORMAT(created_at, \'%M %Y\') as month_year, COUNT(*) as record_count')
-                ->whereYear('created_at', '<=', now()->year)
-                ->groupBy('month_year')
-                ->orderBy('month_year')
-                ->get();
-
-            $monthLabel = $prescriptionMedicines->pluck('month_year')->toArray();
-            $monthlyData = $prescriptionMedicines->pluck('record_count')->toArray();
-
-            $dispensionsPerMonth = [
-                "label" => $monthLabel,
-                "data" => $monthlyData
-            ];
-        } else {
-            $this->date = today();
-            $prescriptionMedicines = PrescriptionMedicine::whereDate('created_at', $this->date)
-                ->selectRaw('DATE_FORMAT(created_at, \'%M %Y\') as month_year, COUNT(*) as record_count')
-                ->whereYear('created_at', '<=', now()->year)
-                ->groupBy('month_year')
-                ->orderBy('month_year')
-                ->get();
-
-            $monthLabel = $prescriptionMedicines->pluck('month')->toArray();
-            $monthlyData = $prescriptionMedicines->pluck('record_count')->toArray();
-
-            $dispensionsPerMonth = [
-                "label" => $monthLabel,
-                "data" => $monthlyData
-            ];
+        if (config('database.default') === 'pgsql') {
+            if ($this->date) {
+                $prescriptionMedicines = PrescriptionMedicine::whereDate('created_at', $this->date)
+                    ->selectRaw("TO_CHAR(created_at, 'FMMonth YYYY') as month_year, COUNT(*) as record_count")
+                    ->whereYear('created_at', '<=', now()->year)
+                    ->groupBy('month_year')
+                    ->orderBy('month_year')
+                    ->get();
+    
+                $monthLabel = $prescriptionMedicines->pluck('month_year')->toArray();
+                $monthlyData = $prescriptionMedicines->pluck('record_count')->toArray();
+    
+                $dispensionsPerMonth = [
+                    "label" => $monthLabel,
+                    "data" => $monthlyData
+                ];
+            } else if ($this->from && $this->to) {
+                $prescriptionMedicines = PrescriptionMedicine::whereDate('created_at', '>=', $this->from)
+                    ->whereDate('created_at', '<=', $this->to)
+                    ->selectRaw("TO_CHAR(created_at, 'FMMonth YYYY') as month_year, COUNT(*) as record_count")
+                    ->whereYear('created_at', '<=', now()->year)
+                    ->groupBy('month_year')
+                    ->orderBy('month_year')
+                    ->get();
+    
+                $monthLabel = $prescriptionMedicines->pluck('month_year')->toArray();
+                $monthlyData = $prescriptionMedicines->pluck('record_count')->toArray();
+    
+                $dispensionsPerMonth = [
+                    "label" => $monthLabel,
+                    "data" => $monthlyData
+                ];
+            } else {
+                $this->date = today();
+                $prescriptionMedicines = PrescriptionMedicine::whereDate('created_at', $this->date)
+                    ->selectRaw('DATE_FORMAT(created_at, \'%M %Y\') as month_year, COUNT(*) as record_count')
+                    ->whereYear('created_at', '<=', now()->year)
+                    ->groupBy('month_year')
+                    ->orderBy('month_year')
+                    ->get();
+    
+                $monthLabel = $prescriptionMedicines->pluck('month')->toArray();
+                $monthlyData = $prescriptionMedicines->pluck('record_count')->toArray();
+    
+                $dispensionsPerMonth = [
+                    "label" => $monthLabel,
+                    "data" => $monthlyData
+                ];
+            }
+        } else if (config('database.default') === 'mysql') {
+            if ($this->date) {
+                $prescriptionMedicines = PrescriptionMedicine::whereDate('created_at', $this->date)
+                    ->selectRaw('DATE_FORMAT(created_at, \'%M %Y\') as month_year, COUNT(*) as record_count')
+                    ->whereYear('created_at', '<=', now()->year)
+                    ->groupBy('month_year')
+                    ->orderBy('month_year')
+                    ->get();
+    
+                $monthLabel = $prescriptionMedicines->pluck('month_year')->toArray();
+                $monthlyData = $prescriptionMedicines->pluck('record_count')->toArray();
+    
+                $dispensionsPerMonth = [
+                    "label" => $monthLabel,
+                    "data" => $monthlyData
+                ];
+            } else if ($this->from && $this->to) {
+                $prescriptionMedicines = PrescriptionMedicine::whereDate('created_at', '>=', $this->from)
+                    ->whereDate('created_at', '<=', $this->to)
+                    ->selectRaw('DATE_FORMAT(created_at, \'%M %Y\') as month_year, COUNT(*) as record_count')
+                    ->whereYear('created_at', '<=', now()->year)
+                    ->groupBy('month_year')
+                    ->orderBy('month_year')
+                    ->get();
+    
+                $monthLabel = $prescriptionMedicines->pluck('month_year')->toArray();
+                $monthlyData = $prescriptionMedicines->pluck('record_count')->toArray();
+    
+                $dispensionsPerMonth = [
+                    "label" => $monthLabel,
+                    "data" => $monthlyData
+                ];
+            } else {
+                $this->date = today();
+                $prescriptionMedicines = PrescriptionMedicine::whereDate('created_at', $this->date)
+                    ->selectRaw('DATE_FORMAT(created_at, \'%M %Y\') as month_year, COUNT(*) as record_count')
+                    ->whereYear('created_at', '<=', now()->year)
+                    ->groupBy('month_year')
+                    ->orderBy('month_year')
+                    ->get();
+    
+                $monthLabel = $prescriptionMedicines->pluck('month')->toArray();
+                $monthlyData = $prescriptionMedicines->pluck('record_count')->toArray();
+    
+                $dispensionsPerMonth = [
+                    "label" => $monthLabel,
+                    "data" => $monthlyData
+                ];
+            }
         }
 
         return $dispensionsPerMonth;
