@@ -145,22 +145,41 @@ class VisitReport
 
     private function getReportByAgeGroupDate()
     {
-        $medicalRecordsByAgeGroup = Patient::whereDate(
-            'medical_records.created_at',
-            $this->date
-        )
-            ->join('medical_records', 'patients.id', '=', 'medical_records.patient_id')
-            ->selectRaw("
-        CASE
-            WHEN TIMESTAMPDIFF(YEAR, patients.birthdate, CURDATE()) < 13 THEN 'children'
-            WHEN TIMESTAMPDIFF(YEAR, patients.birthdate, CURDATE()) BETWEEN 13 AND 18 THEN 'teenager'
-            WHEN TIMESTAMPDIFF(YEAR, patients.birthdate, CURDATE()) BETWEEN 19 AND 40 THEN 'adult'
-            ELSE 'elderly'
-        END as age_group,
-        COUNT(medical_records.id) as record_count
-    ")
-            ->groupBy('age_group')
-            ->get();
+        if (config('database.default') === 'pgsql') {
+            $medicalRecordsByAgeGroup = Patient::whereDate(
+                'medical_records.created_at',
+                $this->date
+            )
+                ->join('medical_records', 'patients.id', '=', 'medical_records.patient_id')
+                ->selectRaw("
+            CASE
+                WHEN EXTRACT(YEAR FROM age(CURRENT_DATE, patients.birthdate)) < 13 THEN 'children'
+                WHEN EXTRACT(YEAR FROM age(CURRENT_DATE, patients.birthdate)) BETWEEN 13 AND 18 THEN 'teenager'
+                WHEN EXTRACT(YEAR FROM age(CURRENT_DATE, patients.birthdate)) BETWEEN 19 AND 40 THEN 'adult'
+                ELSE 'elderly'
+            END as age_group,
+            COUNT(medical_records.id) as record_count
+        ")
+                ->groupBy('age_group')
+                ->get();
+        } else if (config('database.default') === 'mysql') {
+            $medicalRecordsByAgeGroup = Patient::whereDate(
+                'medical_records.created_at',
+                $this->date
+            )
+                ->join('medical_records', 'patients.id', '=', 'medical_records.patient_id')
+                ->selectRaw("
+            CASE
+                WHEN TIMESTAMPDIFF(YEAR, patients.birthdate, CURDATE()) < 13 THEN 'children'
+                WHEN TIMESTAMPDIFF(YEAR, patients.birthdate, CURDATE()) BETWEEN 13 AND 18 THEN 'teenager'
+                WHEN TIMESTAMPDIFF(YEAR, patients.birthdate, CURDATE()) BETWEEN 19 AND 40 THEN 'adult'
+                ELSE 'elderly'
+            END as age_group,
+            COUNT(medical_records.id) as record_count
+        ")
+                ->groupBy('age_group')
+                ->get();
+        }
 
         $ageGroupLabel = $medicalRecordsByAgeGroup->pluck('age_group')->toArray();
         $ageGroupData = $medicalRecordsByAgeGroup->pluck('record_count')->toArray();
@@ -175,28 +194,41 @@ class VisitReport
 
     private function getReportByAgeGroupDateRange()
     {
-        $medicalRecordsByAgeGroup = Patient::whereDate(
-            'medical_records.created_at',
-            '<=',
-            $this->to
-        )
-            ->whereDate(
+        if (config('database.default') === 'pgsql') {
+            $medicalRecordsByAgeGroup = Patient::whereDate(
                 'medical_records.created_at',
-                '>=',
-                $this->from
+                $this->date
             )
-            ->join('medical_records', 'patients.id', '=', 'medical_records.patient_id')
-            ->selectRaw("
-        CASE
-            WHEN TIMESTAMPDIFF(YEAR, patients.birthdate, CURDATE()) < 13 THEN 'children'
-            WHEN TIMESTAMPDIFF(YEAR, patients.birthdate, CURDATE()) BETWEEN 13 AND 18 THEN 'teenager'
-            WHEN TIMESTAMPDIFF(YEAR, patients.birthdate, CURDATE()) BETWEEN 19 AND 40 THEN 'adult'
-            ELSE 'elderly'
-        END as age_group,
-        COUNT(medical_records.id) as record_count
-    ")
-            ->groupBy('age_group')
-            ->get();
+                ->join('medical_records', 'patients.id', '=', 'medical_records.patient_id')
+                ->selectRaw("
+            CASE
+                WHEN EXTRACT(YEAR FROM age(CURRENT_DATE, patients.birthdate)) < 13 THEN 'children'
+                WHEN EXTRACT(YEAR FROM age(CURRENT_DATE, patients.birthdate)) BETWEEN 13 AND 18 THEN 'teenager'
+                WHEN EXTRACT(YEAR FROM age(CURRENT_DATE, patients.birthdate)) BETWEEN 19 AND 40 THEN 'adult'
+                ELSE 'elderly'
+            END as age_group,
+            COUNT(medical_records.id) as record_count
+        ")
+                ->groupBy('age_group')
+                ->get();
+        } else if (config('database.default') === 'mysql') {
+            $medicalRecordsByAgeGroup = Patient::whereDate(
+                'medical_records.created_at',
+                $this->date
+             )
+                ->join('medical_records', 'patients.id', '=', 'medical_records.patient_id')
+                ->selectRaw("
+            CASE
+                WHEN TIMESTAMPDIFF(YEAR, patients.birthdate, CURDATE()) < 13 THEN 'children'
+                WHEN TIMESTAMPDIFF(YEAR, patients.birthdate, CURDATE()) BETWEEN 13 AND 18 THEN 'teenager'
+                WHEN TIMESTAMPDIFF(YEAR, patients.birthdate, CURDATE()) BETWEEN 19 AND 40 THEN 'adult'
+                ELSE 'elderly'
+            END as age_group,
+            COUNT(medical_records.id) as record_count
+        ")
+                ->groupBy('age_group')
+                ->get();
+        }
 
         $ageGroupLabel = $medicalRecordsByAgeGroup->pluck('age_group')->toArray();
         $ageGroupData = $medicalRecordsByAgeGroup->pluck('record_count')->toArray();
@@ -211,24 +243,45 @@ class VisitReport
 
     private function getReportByTimeOfTheDayDate()
     {
-        $medicalRecordsByAgeGroup = Patient::whereDate(
-            'medical_records.created_at',
-            $this->date
-        )
-            ->join('medical_records', 'patients.id', '=', 'medical_records.patient_id')
-            ->selectRaw("
-        CASE
-            WHEN HOUR(medical_records.created_at) BETWEEN 3 AND 7 THEN 'Morning (3 to 7)'
-            WHEN HOUR(medical_records.created_at) BETWEEN 8 AND 13 THEN 'Noon (8 to 13)'
-            WHEN HOUR(medical_records.created_at) BETWEEN 14 AND 18 THEN 'Evening (14 to 18)'
-            WHEN HOUR(medical_records.created_at) BETWEEN 19 AND 23 THEN 'Night (19 to 2)'
-            WHEN HOUR(medical_records.created_at) BETWEEN 0 AND 2 THEN 'Night (19 to 2)'
-            ELSE 'invalid time'
-        END as time_group,
-        COUNT(medical_records.id) as record_count
-    ")
-            ->groupBy('time_group')
-            ->get();
+        if (config('database.default') === 'pgsql') {
+            $medicalRecordsByAgeGroup = Patient::whereDate(
+                'medical_records.created_at',
+                $this->date
+            )
+                ->join('medical_records', 'patients.id', '=', 'medical_records.patient_id')
+                ->selectRaw("
+            CASE
+                WHEN EXTRACT(HOUR FROM medical_records.created_at) BETWEEN 3 AND 7 THEN 'Morning (3 to 7)'
+                WHEN EXTRACT(HOUR FROM medical_records.created_at) BETWEEN 8 AND 13 THEN 'Noon (8 to 13)'
+                WHEN EXTRACT(HOUR FROM medical_records.created_at) BETWEEN 14 AND 18 THEN 'Evening (14 to 18)'
+                WHEN EXTRACT(HOUR FROM medical_records.created_at) BETWEEN 19 AND 23 THEN 'Night (19 to 2)'
+                WHEN EXTRACT(HOUR FROM medical_records.created_at) BETWEEN 0 AND 2 THEN 'Night (19 to 2)'
+                ELSE 'invalid time'
+            END as time_group,
+            COUNT(medical_records.id) as record_count
+        ")
+                ->groupBy('time_group')
+                ->get();
+        } else if (config('database.default') === 'mysql') {
+            $medicalRecordsByAgeGroup = Patient::whereDate(
+                'medical_records.created_at',
+                $this->date
+            )
+                ->join('medical_records', 'patients.id', '=', 'medical_records.patient_id')
+                ->selectRaw("
+            CASE
+                WHEN HOUR(medical_records.created_at) BETWEEN 3 AND 7 THEN 'Morning (3 to 7)'
+                WHEN HOUR(medical_records.created_at) BETWEEN 8 AND 13 THEN 'Noon (8 to 13)'
+                WHEN HOUR(medical_records.created_at) BETWEEN 14 AND 18 THEN 'Evening (14 to 18)'
+                WHEN HOUR(medical_records.created_at) BETWEEN 19 AND 23 THEN 'Night (19 to 2)'
+                WHEN HOUR(medical_records.created_at) BETWEEN 0 AND 2 THEN 'Night (19 to 2)'
+                ELSE 'invalid time'
+            END as time_group,
+            COUNT(medical_records.id) as record_count
+        ")
+                ->groupBy('time_group')
+                ->get();
+        }
 
         $ageGroupLabel = $medicalRecordsByAgeGroup->pluck('time_group')->toArray();
         $ageGroupData = $medicalRecordsByAgeGroup->pluck('record_count')->toArray();
@@ -243,30 +296,45 @@ class VisitReport
 
     private function getReportByTimeOfTheDayDateRange()
     {
-        $medicalRecordsByAgeGroup = Patient::whereDate(
-            'medical_records.created_at',
-            '<=',
-            $this->to
-        )
-            ->whereDate(
+        if (config('database.default') === 'pgsql') {
+            $medicalRecordsByAgeGroup = Patient::whereDate(
                 'medical_records.created_at',
-                '>=',
-                $this->from
+                $this->date
             )
-            ->join('medical_records', 'patients.id', '=', 'medical_records.patient_id')
-            ->selectRaw("
-        CASE
-            WHEN HOUR(medical_records.created_at) BETWEEN 3 AND 7 THEN 'Morning (3 to 7)'
-            WHEN HOUR(medical_records.created_at) BETWEEN 8 AND 13 THEN 'Noon (8 to 13)'
-            WHEN HOUR(medical_records.created_at) BETWEEN 14 AND 18 THEN 'Evening (14 to 18)'
-            WHEN HOUR(medical_records.created_at) BETWEEN 19 AND 23 THEN 'Night (19 to 2)'
-            WHEN HOUR(medical_records.created_at) BETWEEN 0 AND 2 THEN 'Night (19 to 2)'
-            ELSE 'invalid time'
-        END as time_group,
-        COUNT(medical_records.id) as record_count
-    ")
-            ->groupBy('time_group')
-            ->get();
+                ->join('medical_records', 'patients.id', '=', 'medical_records.patient_id')
+                ->selectRaw("
+            CASE
+                WHEN EXTRACT(HOUR FROM medical_records.created_at) BETWEEN 3 AND 7 THEN 'Morning (3 to 7)'
+                WHEN EXTRACT(HOUR FROM medical_records.created_at) BETWEEN 8 AND 13 THEN 'Noon (8 to 13)'
+                WHEN EXTRACT(HOUR FROM medical_records.created_at) BETWEEN 14 AND 18 THEN 'Evening (14 to 18)'
+                WHEN EXTRACT(HOUR FROM medical_records.created_at) BETWEEN 19 AND 23 THEN 'Night (19 to 2)'
+                WHEN EXTRACT(HOUR FROM medical_records.created_at) BETWEEN 0 AND 2 THEN 'Night (19 to 2)'
+                ELSE 'invalid time'
+            END as time_group,
+            COUNT(medical_records.id) as record_count
+        ")
+                ->groupBy('time_group')
+                ->get();
+        } else if (config('database.default') === 'mysql') {
+            $medicalRecordsByAgeGroup = Patient::whereDate(
+                'medical_records.created_at',
+                $this->date
+            )
+                ->join('medical_records', 'patients.id', '=', 'medical_records.patient_id')
+                ->selectRaw("
+            CASE
+                WHEN HOUR(medical_records.created_at) BETWEEN 3 AND 7 THEN 'Morning (3 to 7)'
+                WHEN HOUR(medical_records.created_at) BETWEEN 8 AND 13 THEN 'Noon (8 to 13)'
+                WHEN HOUR(medical_records.created_at) BETWEEN 14 AND 18 THEN 'Evening (14 to 18)'
+                WHEN HOUR(medical_records.created_at) BETWEEN 19 AND 23 THEN 'Night (19 to 2)'
+                WHEN HOUR(medical_records.created_at) BETWEEN 0 AND 2 THEN 'Night (19 to 2)'
+                ELSE 'invalid time'
+            END as time_group,
+            COUNT(medical_records.id) as record_count
+        ")
+                ->groupBy('time_group')
+                ->get();
+        }
 
         $ageGroupLabel = $medicalRecordsByAgeGroup->pluck('time_group')->toArray();
         $ageGroupData = $medicalRecordsByAgeGroup->pluck('record_count')->toArray();
