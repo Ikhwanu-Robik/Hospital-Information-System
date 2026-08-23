@@ -13,7 +13,7 @@
         <div class="col-md-12">
             <div class="card">
                 <div class="card-header">
-                    <label for="ping-interval">Set the interval at which the doctor pings the server. This is useful for
+                    <label for="ping-interval">Set the interval at which the doctor pings the server (in miliseconds). This is useful for
                         checking
                         a doctor's online status.</label>
                 </div>
