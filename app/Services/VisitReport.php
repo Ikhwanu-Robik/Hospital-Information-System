@@ -354,8 +354,8 @@ class VisitReport
             $this->date
         )
             ->join('medical_records', 'medical_records.patient_id', '=', 'patients.id')
-            ->selectRaw('patients.id, patients.NIK, COUNT(medical_records.id) AS record_count')
-            ->groupBy('patients.id', 'patients.NIK')->get();
+            ->selectRaw('patients.id, patients.nik, COUNT(medical_records.id) AS record_count')
+            ->groupBy('patients.id', 'patients.nik')->get();
 
 
         $bpjsLabel = ["BPJS", "Non-BPJS"];
@@ -392,8 +392,8 @@ class VisitReport
                 $this->from
             )
             ->join('medical_records', 'medical_records.patient_id', '=', 'patients.id')
-            ->selectRaw('patients.id, patients.NIK, COUNT(medical_records.id) AS record_count')
-            ->groupBy('patients.id', 'patients.NIK')->get();
+            ->selectRaw('patients.id, patients.nik, COUNT(medical_records.id) AS record_count')
+            ->groupBy('patients.id', 'patients.nik')->get();
 
 
         $bpjsLabel = ["BPJS", "Non-BPJS"];
@@ -419,11 +419,19 @@ class VisitReport
 
     private function getReportOverTime()
     {
-        $medicalRecords = MedicalRecord::selectRaw("DATE_FORMAT(created_at, \"%M %Y\") as month_year, COUNT(*) as record_count")
-            ->whereYear('created_at', '<=', now()->year)
-            ->groupBy('month_year')
-            ->orderBy('month_year')
-            ->get();
+        if (config('database.default') === 'pgsql') {
+            $medicalRecords = MedicalRecord::selectRaw("TO_CHAR(created_at, 'FMMonth YYYY') as month_year, COUNT(*) as record_count")
+                ->whereYear('created_at', '<=', now()->year)
+                ->groupBy('month_year')
+                ->orderBy('month_year')
+                ->get();
+        } else if (config('database.default') === 'mysql') {
+            $medicalRecords = MedicalRecord::selectRaw("DATE_FORMAT(created_at, \"%M %Y\") as month_year, COUNT(*) as record_count")
+                ->whereYear('created_at', '<=', now()->year)
+                ->groupBy('month_year')
+                ->orderBy('month_year')
+                ->get();
+        }
 
         $monthLabel = $medicalRecords->pluck('month_year')->toArray();
         $monthlyData = $medicalRecords->pluck('record_count')->toArray();
