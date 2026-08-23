@@ -13,7 +13,7 @@ class Patient extends Model
     protected $fillable = [
         'medical_record_number',
         'full_name',
-        'NIK',
+        'nik',
         'birthdate',
         'gender',
         'address',

@@ -43,7 +43,7 @@ class PharmacyApp
                 $prescriptionRecord->payment_status = PaymentStatus::SUCCESSFUL->value;
                 $prescriptionRecord->save();
 
-                BPJS::setPatientNIK($patient->NIK)->sendInvoice($invoice);
+                BPJS::setPatientNIK($patient->nik)->sendInvoice($invoice);
 
                 return $invoice;
             } else {
