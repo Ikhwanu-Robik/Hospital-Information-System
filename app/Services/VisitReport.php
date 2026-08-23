@@ -362,7 +362,7 @@ class VisitReport
         $bpjsData = [0, 0];
 
         foreach ($patients as $patient) {
-            $bpjsPatient = BPJS::getPatient($patient->NIK);
+            $bpjsPatient = BPJS::getPatient($patient->nik);
 
             if (BPJS::validateMembership($bpjsPatient)) {
                 $bpjsData[0] += $patient->record_count;
@@ -400,7 +400,7 @@ class VisitReport
         $bpjsData = [0, 0];
 
         foreach ($patients as $patient) {
-            $bpjsPatient = BPJS::getPatient($patient->NIK);
+            $bpjsPatient = BPJS::getPatient($patient->nik);
 
             if (BPJS::validateMembership($bpjsPatient)) {
                 $bpjsData[0] += $patient->record_count;
