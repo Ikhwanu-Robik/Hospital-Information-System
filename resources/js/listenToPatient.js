@@ -1,3 +1,4 @@
+import axios from "axios";
 import "./app";
 import Swal from "sweetalert2";
 
@@ -5,7 +6,19 @@ let doctorProfileId = document.querySelector(
     'meta[name="doctor-profile-id"]'
 ).content;
 
-window.Echo.private(`CheckUp.Doctors.${doctorProfileId}`).listen(
+function callWaitingPatient() {
+    axios.post('/diagnosis/patient/call', {
+        doctor_profile_id: doctorProfileId,
+    });
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('call-patient-btn').addEventListener('click', callWaitingPatient);
+});
+
+window.Echo.private(`CheckUp.Doctors.${doctorProfileId}`)
+    .subscribed(callWaitingPatient)
+    .listen(
     "PatientWishToMeetDoctor",
     async (e) => {
         Swal.fire({
@@ -22,7 +35,7 @@ window.Echo.private(`CheckUp.Doctors.${doctorProfileId}`).listen(
 async function fetchMedicalRecords(patient) {
     try {
         let response = await fetch(
-            `http://127.0.0.1:8000/diagnosis/patient/${patient.id}/medical-records`,
+            `/diagnosis/patient/${patient.id}/medical-records`,
             {
                 method: "GET",
                 headers: {
@@ -98,7 +111,7 @@ function fillBiodata(queueId, patient) {
         patient.BPJS_number != null ? patient.BPJS_number : "no";
 }
 
-function fillMedicalRecordData() {
+function fillMedicalRecordData(medicalRecords) {
     // fill the patient's medical records
     let medicalRecordsTableBody = document.getElementById(
         "medical-records-tbody"
