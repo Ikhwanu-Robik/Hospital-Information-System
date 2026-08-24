@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Validation\ValidationException;
 
 Route::get('/login', function () {
     return view('login-form');
@@ -28,6 +29,8 @@ Route::post('/login', function (Request $request) {
         // TODO: move other roles login into this function
         // that is, move them away from Backpack's login controller
         // TODO: convert this function into a Controller
+    } else {
+        throw ValidationException::withMessages(['email' => __('auth.failed')]);
     }
 })->name('login.action');
 
