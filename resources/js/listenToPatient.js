@@ -22,7 +22,7 @@ window.Echo.private(`CheckUp.Doctors.${doctorProfileId}`).listen(
 async function fetchMedicalRecords(patient) {
     try {
         let response = await fetch(
-            `http://127.0.0.1:8000/diagnosis/patient/${patient.id}/medical-records`,
+            `/diagnosis/patient/${patient.id}/medical-records`,
             {
                 method: "GET",
                 headers: {
