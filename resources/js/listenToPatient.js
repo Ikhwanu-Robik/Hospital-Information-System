@@ -98,7 +98,7 @@ function fillBiodata(queueId, patient) {
         patient.BPJS_number != null ? patient.BPJS_number : "no";
 }
 
-function fillMedicalRecordData() {
+function fillMedicalRecordData(medicalRecords) {
     // fill the patient's medical records
     let medicalRecordsTableBody = document.getElementById(
         "medical-records-tbody"
