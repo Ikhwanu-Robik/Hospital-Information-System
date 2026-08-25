@@ -17,6 +17,11 @@ class PrescriptionIsNotPaid implements ValidationRule
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
         $prescriptionRecord = PrescriptionRecord::find($value);
+
+        if (!$prescriptionRecord) {
+            return;
+        }
+
         if ($prescriptionRecord->payment_status == PaymentStatus::SUCCESSFUL->value) {
             $fail("The selected prescription record must not already been paid");
         }
