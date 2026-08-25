@@ -56,7 +56,7 @@
                </tr>
                <tr>
                   <th>BPJS</th>
-                  <td id="BPJS_number"></td>
+                  <td id="BPJS_status"></td>
                </tr>
             </tbody>
          </table>

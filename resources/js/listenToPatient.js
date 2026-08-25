@@ -106,9 +106,9 @@ function fillBiodata(queueId, patient) {
     let phone = document.getElementById("phone");
     phone.textContent = patient.phone;
 
-    let bpjs_number = document.getElementById("BPJS_number");
-    bpjs_number.textContent =
-        patient.BPJS_number != null ? patient.BPJS_number : "no";
+    let bpjs_status = document.getElementById("BPJS_status");
+    bpjs_status.textContent =
+        patient.BPJS ? "yes" : "no";
 }
 
 function fillMedicalRecordData(medicalRecords) {

@@ -5,6 +5,7 @@ namespace App\Events;
 use App\Models\Patient;
 use App\Models\DoctorProfile;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
+use App\Facades\BPJS;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Foundation\Events\Dispatchable;
@@ -26,6 +27,9 @@ class PatientWishToMeetDoctor implements ShouldBroadcastNow
         $this->queueId = $queueId;
         $this->doctorProfile = $doctorProfile;
         $this->patient = $patient;
+
+        $bpjsPatient = BPJS::getPatient($this->patient->nik);
+        $this->patient->BPJS = BPJS::validateMembership($bpjsPatient);
     }
 
     /**
