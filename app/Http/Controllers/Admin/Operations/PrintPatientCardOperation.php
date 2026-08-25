@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin\Operations;
 
+use App\Facades\BPJS;
 use App\Models\Patient;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -55,6 +56,9 @@ trait PrintPatientCardOperation
         $this->data['crud'] = $this->crud;
         $this->data['title'] = CRUD::getTitle() ?? 'Print Patient Card '.$this->crud->entity_name;
         $this->data['patient'] = Patient::find($request->route('id'));
+        
+        $bpjsPatient = BPJS::getPatient(($this->data['patient'])->nik);
+        $this->data['patient']->BPJS = BPJS::validateMembership($bpjsPatient);
 
         // load the view
         // return view('crud::operations.print_patient_card', $this->data);

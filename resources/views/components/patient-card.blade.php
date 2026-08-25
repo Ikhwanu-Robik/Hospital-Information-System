@@ -25,7 +25,7 @@
                     <p class="mb-1"><strong>NIK:</strong> {{ $patient->nik }}</p>
                     <p class="mb-1"><strong>Birthdate:</strong> {{ $patient->birthdate }}</p>
                     <p class="mb-1"><strong>Gender:</strong> {{ ucfirst($patient->gender) }}</p>
-                    <p class="mb-1"><strong>BPJS:</strong> {{ $patient->BPJS_number ?? 'no' }}</p>
+                    <p class="mb-1"><strong>BPJS:</strong> {{ $patient->BPJS ? 'yes' : 'no' }}</p>
                 </div>
             </div>
 

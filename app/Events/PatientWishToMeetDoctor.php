@@ -2,14 +2,11 @@
 
 namespace App\Events;
 
-use App\Models\MedicalRecord;
+use App\Facades\BPJS;
 use App\Models\Patient;
 use App\Models\DoctorProfile;
-use Illuminate\Broadcasting\Channel;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Broadcasting\PrivateChannel;
-use Illuminate\Broadcasting\PresenceChannel;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
@@ -30,6 +27,9 @@ class PatientWishToMeetDoctor implements ShouldBroadcast
         $this->queueId = $queueId;
         $this->doctorProfile = $doctorProfile;
         $this->patient = $patient;
+
+        $bpjsPatient = BPJS::getPatient($this->patient->nik);
+        $this->patient->BPJS = BPJS::validateMembership($bpjsPatient);
     }
 
     /**
