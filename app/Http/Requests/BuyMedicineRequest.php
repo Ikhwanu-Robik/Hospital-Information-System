@@ -23,9 +23,10 @@ class BuyMedicineRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'patient_id' => 'required',
-            'doctor_profile_id' => 'required',
+            'patient_id' => 'required|exists:patients,id',
+            'doctor_profile_id' => 'required|exists:doctor_profiles,id',
             'id' => [
+                'required',
                 'exists:prescription_records,id',
                 new PrescriptionIsNotPaid
             ]
