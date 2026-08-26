@@ -14,6 +14,7 @@
         "laravel/tinker": "^2.10.1",
         "league/flysystem-aws-s3-v3": "^3.0",
         "pusher/pusher-php-server": "^7.3",
+        "sentry/sentry-laravel": "^4.27",
         "spatie/laravel-permission": "^6.21",
         "stripe/stripe-php": "^17.6"
     },

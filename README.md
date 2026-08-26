@@ -87,6 +87,9 @@ BPJS_EMAIL="bpjs@menkes.co.id"
 # QZ Tray Message Signing and Certificate
 QZ_TRAY_PRIVATE_KEY_PATH=/env/www/qztray/private.pem
 QZ_TRAY_CERTIFICATE_PATH=/env/www/qztray/certificate.txt
+
+SENTRY_LARAVEL_DSN=
+SENTRY_SEND_DEFAULT_PII=
 ```
 
 ---
