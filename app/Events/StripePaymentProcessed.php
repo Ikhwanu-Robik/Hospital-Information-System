@@ -2,6 +2,7 @@
 
 namespace App\Events;
 
+use App\Models\PrescriptionRecord;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Broadcasting\PrivateChannel;
@@ -20,10 +21,10 @@ class StripePaymentProcessed implements ShouldBroadcast
     /**
      * Create a new event instance.
      */
-    public function __construct($checkoutSession)
+    public function __construct(PrescriptionRecord $prescriptionRecord)
     {
-        $this->paymentStatus = $checkoutSession->payment_status;
-        $this->prescriptionRecordId = $checkoutSession->metadata['prescription_record_id'];
+        $this->paymentStatus = $prescriptionRecord->payment_status;
+        $this->prescriptionRecordId = $prescriptionRecord->id;
     }
 
     /**

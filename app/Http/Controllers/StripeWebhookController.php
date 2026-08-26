@@ -6,7 +6,6 @@ use Stripe\Webhook;
 use App\Facades\PharmacyApp;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Jobs\DelayStripePaymentProcessedEvent;
 use Stripe\Exception\SignatureVerificationException;
 
 class StripeWebhookController extends Controller
@@ -36,7 +35,6 @@ class StripeWebhookController extends Controller
             $checkoutSession = $event->data->object;
 
             PharmacyApp::handlePaymentNews($checkoutSession);
-            DelayStripePaymentProcessedEvent::dispatch($checkoutSession)->delay(3);
         }
 
         return response('OK', 200);
