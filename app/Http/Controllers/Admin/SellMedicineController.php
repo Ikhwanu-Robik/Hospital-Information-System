@@ -24,9 +24,13 @@ class SellMedicineController extends CrudController
         $prescriptionId = $buyMedicineRequest->validated('id');
         $code = "RX-" . $patientId . "-" . $doctorProfileId . "-" . $prescriptionId;
 
-        $prescription = PrescriptionRecord::where('code', $code)->first();
-        $prescriptionMedicines = PrescriptionRecord::with(['prescriptionMedicines.medicine'])
-            ->find($buyMedicineRequest->validated('id'))->prescriptionMedicines;
+        $prescriptionWithMeds = PrescriptionRecord::where('code', $code)->with(['prescriptionMedicines.medicine'])->first();
+
+        $prescription = $prescriptionWithMeds->toArray();
+        unset($prescription['prescription_medicines']);
+        $prescription = (object) $prescription;
+
+        $prescriptionMedicines = $prescriptionWithMeds->prescriptionMedicines;
 
         return view('admin.sell-medicine', ['prescription' => $prescription, 'prescriptionMedicines' => $prescriptionMedicines]);
     }
