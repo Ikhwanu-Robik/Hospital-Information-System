@@ -7,7 +7,13 @@ use App\Models\DoctorProfile;
 use App\Models\DoctorSchedule;
 use Illuminate\Support\Facades\Broadcast;
 
-Broadcast::channel('CheckUp.Doctors.{doctorProfile}', function ($user, DoctorProfile $doctorProfile) {
+Broadcast::channel('CheckUp.Doctors.{doctorProfileId}', function ($user, $doctorProfileId) {
+    $doctorProfile = DoctorProfile::find($doctorProfileId);
+
+    if (!$doctorProfile) {
+        return false;
+    }
+
     $now = now();
     
     $isDoctorInSchedule = DoctorSchedule::where('doctor_profile_id', $doctorProfile->id)
