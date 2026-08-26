@@ -9,3 +9,7 @@ Route::post('/stripe-webhook', StripeWebhookController::class)->middleware(Force
 
 Route::get('/qztray/certificate', [QZTrayPrintingController::class, 'certificate'])->middleware(ForceJsonResponse::class);
 Route::post('/qztray/message/sign', [QZTrayPrintingController::class, 'sign'])->middleware(ForceJsonResponse::class);
+
+Route::get('/medicine-dispense-status/{prescriptionRecordId}', function (\Illuminate\Http\Request $request, string $prescriptionRecordId) {
+    \App\Events\StripePaymentProcessed::dispatch($prescriptionRecordId);
+});

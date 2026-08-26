@@ -1,3 +1,4 @@
+import axios from "axios";
 import "./app";
 import Swal from "sweetalert2";
 
@@ -7,7 +8,11 @@ let prescriptionRecordId = document.querySelector(
 
 let isStripePaymentProcessedBroadcasted = false;
 
-window.Echo.channel(`Medicine.Dispense.${prescriptionRecordId}`).listen(
+window.Echo.channel(`Medicine.Dispense.${prescriptionRecordId}`)
+    .subscribed(() => {
+        axios.get(`/api/medicine-dispense-status/${prescriptionRecordId}`);
+    })
+    .listen(
     "StripePaymentProcessed",
     async (e) => {
         isStripePaymentProcessedBroadcasted = true;
