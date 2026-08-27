@@ -31,6 +31,7 @@ class BPJS
 
     public function getPatient(string $NIK)
     {
+        logger('about to get the patient\'s BPJS data from ' . config('bpjs.api_url') . ' by NIK: ' . $NIK);
         $patient = $this->callBPJSAPI('/bpjs/check', ['NIK' => $NIK]);
         return $patient;
     }
