@@ -151,7 +151,8 @@ class CheckUpController extends Controller
             'doctor_profile_id' => 'required|exists:doctor_profiles,id'
         ]);
 
-        DoctorIsFree::dispatch($validated['doctor_profile_id']);
+        $doctor = DoctorProfile::with('specialization')->find($validated['doctor_profile_id']);
+        DoctorIsFree::dispatch($doctor);
     }
 
     public function skipPatient(Request $request)

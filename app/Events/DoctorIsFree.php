@@ -27,15 +27,8 @@ class DoctorIsFree
     /**
      * Create a new event instance.
      */
-    public function __construct($doctorProfileId)
+    public function __construct(DoctorProfile $doctorProfile)
     {
-        logger('@DoctorIsFree fetching the doctor profile by id');
-        $doctorProfile = DoctorProfile::with('specialization')->find($doctorProfileId);
-
-        if (!$doctorProfile) {
-            logger('@DoctorIsFree the id doesn\'t correspond to any doctor profile y\'all');
-        }
-
         $this->doctorProfile = $doctorProfile;
         $this->doctorSpecialization = $doctorProfile->specialization->name;
     }
