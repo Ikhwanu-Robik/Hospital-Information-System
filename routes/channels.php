@@ -35,7 +35,8 @@ Broadcast::channel('CheckUp.Doctors.{doctorProfileId}', function ($user, $doctor
         logger('doctor can acccept patient, shocking. he\'s also in schedule too');
         if ($isDoctorBusy) {
             logger('he also has an awaiting patient');
-            DoctorIsFree::dispatch($doctorProfile);
+            DoctorIsFree::dispatch($doctorProfileId);
+            logger('dispatched DoctorIsFree event');
         }
         logger('okay, you may subscribe to this channel!');
         return true;
