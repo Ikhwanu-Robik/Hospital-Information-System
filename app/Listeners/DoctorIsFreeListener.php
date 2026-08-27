@@ -33,11 +33,13 @@ class DoctorIsFreeListener
             ->first();
 
         if ($oldestQueue) {
+            logger(json_encode($oldestQueue->toArray()));
+
             logger('dispatching QueueReadyForBroadcast');
             QueueReadyForBroadcast::dispatch($oldestQueue->id);
 
             logger('dispatching PatientWisthToMeetDoctor');
-            PatientWishToMeetDoctor::dispatch($event->doctorProfile->id, $oldestQueue->patient->id, $oldestQueue->id);
+            PatientWishToMeetDoctor::dispatch($oldestQueue->doctorProfile->id, $oldestQueue->patient->id, $oldestQueue->id);
         }
     }
 }
