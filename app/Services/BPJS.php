@@ -45,7 +45,10 @@ class BPJS
     {
         $consId = "Cons-Id " . config('bpjs.cons_id');
         $url = config('bpjs.api_url') . $path;
-        $response = Http::withHeader('Authorization', $consId)
+        $response = Http::withHeaders([
+            'Authorization' => $consId,
+            'Accept' => 'application/json',
+        ])
             ->post($url, $data);
         return $response;
     }
