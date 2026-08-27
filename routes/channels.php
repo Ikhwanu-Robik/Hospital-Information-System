@@ -1,21 +1,12 @@
 <?php
 
-use App\Enums\CheckUpStatus;
-use App\Events\DoctorIsFree;
-use App\Models\CheckUpQueue;
 use App\Models\DoctorProfile;
 use App\Models\DoctorSchedule;
 use Illuminate\Support\Facades\Broadcast;
 
-Broadcast::channel('CheckUp.Doctors.{doctorProfileId}', function ($user, $doctorProfileId) {
-    $doctorProfile = DoctorProfile::find($doctorProfileId);
-
-    if (!$doctorProfile) {
-        return false;
-    }
-
+Broadcast::channel('CheckUp.Doctors.{doctorProfile}', function ($user, DoctorProfile $doctorProfile) {
     $now = now();
-    
+
     $isDoctorInSchedule = DoctorSchedule::where('doctor_profile_id', $doctorProfile->id)
         ->where('day_of_week', $now->dayName)
         ->where('start_time', '<=', $now->format('H:i:s'))
@@ -25,6 +16,7 @@ Broadcast::channel('CheckUp.Doctors.{doctorProfileId}', function ($user, $doctor
     if ($doctorProfile->user->can('accept patient') && $isDoctorInSchedule) {
         return true;
     }
+
     return false;
 });
 

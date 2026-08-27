@@ -13,3 +13,7 @@ Route::post('/qztray/message/sign', [QZTrayPrintingController::class, 'sign'])->
 Route::get('/medicine-dispense-status/{prescriptionRecord}', function (\Illuminate\Http\Request $request, \App\Models\PrescriptionRecord $prescriptionRecord) {
     \App\Events\StripePaymentProcessed::dispatch($prescriptionRecord);
 });
+
+Route::get('/test-log', function () {
+    logger('testing my log');
+});
