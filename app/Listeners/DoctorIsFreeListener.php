@@ -32,7 +32,7 @@ class DoctorIsFreeListener
         if ($oldestQueue) {
             QueueReadyForBroadcast::dispatch($oldestQueue->id);
 
-            PatientWishToMeetDoctor::dispatch($oldestQueue->doctorProfile->id, $oldestQueue->patient->id, $oldestQueue->id);
+            PatientWishToMeetDoctor::dispatch($oldestQueue->doctorProfile, $oldestQueue->patient, $oldestQueue->id);
         }
     }
 }

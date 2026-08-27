@@ -23,12 +23,8 @@ class PatientWishToMeetDoctor implements ShouldBroadcastNow
     /**
      * Create a new event instance.
      */
-    public function __construct($doctorProfileId, $patientId, $queueId)
+    public function __construct(DoctorProfile $doctorProfile, Patient $patient, $queueId)
     {
-        $doctorProfile = DoctorProfile::find($doctorProfileId);
-
-        $patient = Patient::find($patientId);
-
         $this->queueId = $queueId;
         $this->doctorProfile = $doctorProfile;
         $this->patient = $patient;
