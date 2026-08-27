@@ -22,14 +22,7 @@ Broadcast::channel('CheckUp.Doctors.{doctorProfileId}', function ($user, $doctor
         ->where('end_time', '>=', $now->format('H:i:s'))
         ->exists();
 
-    $isDoctorBusy = CheckUpQueue::where('doctor_profile_id', $doctorProfile->id)
-            ->where('status', CheckUpStatus::WAITING->value)
-            ->exists();
-
     if ($doctorProfile->user->can('accept patient') && $isDoctorInSchedule) {
-        if ($isDoctorBusy) {
-            DoctorIsFree::dispatch($doctorProfile);
-        }
         return true;
     }
     return false;
