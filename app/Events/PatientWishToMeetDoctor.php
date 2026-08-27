@@ -29,14 +29,14 @@ class PatientWishToMeetDoctor implements ShouldBroadcastNow
         $doctorProfile = DoctorProfile::find($doctorProfileId);
 
         if ($doctorProfile) {
-            logger('@PatientWishToMeetDoctor doctor profile not found');
+            logger('@PatientWishToMeetDoctor doctor profile with id ' . $doctorProfileId . ' not found');
         }
 
         logger('@PatientWishToMeetDoctor getting patient');
         $patient = Patient::find($patientId);
 
         if ($patient) {
-            logger('@PatientWishToMeetDoctor patient not found');
+            logger('@PatientWishToMeetDoctor patient with id ' . $patientId . ' not found');
         }
 
         $this->queueId = $queueId;
@@ -51,7 +51,8 @@ class PatientWishToMeetDoctor implements ShouldBroadcastNow
             $this->patient->BPJS = BPJS::validateMembership($bpjsPatient);
             logger('validated BPJS patient membership');
         } catch (Exception $e) {
-            logger('there was an error while getting BPJS patient and/or validating his membership', ['error message' => $e->getMessage()]);
+            logger('there was an error while getting BPJS patient and/or validating his membership');
+            logger('error: ' . $e->getMessage());
         }
     }
 

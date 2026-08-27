@@ -33,7 +33,7 @@ class DoctorIsFreeListener
             ->first();
 
         if ($oldestQueue) {
-            logger(json_encode($oldestQueue->toArray()));
+            logger($oldestQueue->toArray());
 
             logger('dispatching QueueReadyForBroadcast');
             QueueReadyForBroadcast::dispatch($oldestQueue->id);

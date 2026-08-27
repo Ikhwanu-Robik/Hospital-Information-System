@@ -27,7 +27,7 @@ class QueueReadyForBroadcast implements ShouldBroadcastNow
         $checkUpQueue = CheckUpQueue::find($checkUpQueueId);
 
         if (!$checkUpQueue) {
-            logger('@QueueReadyForBroadcast no check up queue for the given id');
+            logger('@QueueReadyForBroadcast no check up queue for the given id=' . $checkUpQueueId);
         }
 
         $this->locket = $checkUpQueue->locket;
