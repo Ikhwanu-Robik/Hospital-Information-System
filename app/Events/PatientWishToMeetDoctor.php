@@ -28,14 +28,14 @@ class PatientWishToMeetDoctor implements ShouldBroadcastNow
         logger('@PatientWishToMeetDoctor getting doctor profile');
         $doctorProfile = DoctorProfile::find($doctorProfileId);
 
-        if ($doctorProfile) {
+        if (!$doctorProfile) {
             logger('@PatientWishToMeetDoctor doctor profile with id ' . $doctorProfileId . ' not found');
         }
 
         logger('@PatientWishToMeetDoctor getting patient');
         $patient = Patient::find($patientId);
 
-        if ($patient) {
+        if (!$patient) {
             logger('@PatientWishToMeetDoctor patient with id ' . $patientId . ' not found');
         }
 
