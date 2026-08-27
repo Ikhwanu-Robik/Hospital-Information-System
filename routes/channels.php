@@ -37,6 +37,7 @@ Broadcast::channel('CheckUp.Doctors.{doctorProfileId}', function ($user, $doctor
             logger('he also has an awaiting patient');
             DoctorIsFree::dispatch($doctorProfile);
         }
+        logger('okay, you may subscribe to this channel!');
         return true;
     }
 
