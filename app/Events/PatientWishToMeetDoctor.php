@@ -25,33 +25,19 @@ class PatientWishToMeetDoctor implements ShouldBroadcastNow
      */
     public function __construct($doctorProfileId, $patientId, $queueId)
     {
-        logger('@PatientWishToMeetDoctor getting doctor profile');
         $doctorProfile = DoctorProfile::find($doctorProfileId);
 
-        if (!$doctorProfile) {
-            logger('@PatientWishToMeetDoctor doctor profile with id ' . $doctorProfileId . ' not found');
-        }
-
-        logger('@PatientWishToMeetDoctor getting patient');
         $patient = Patient::find($patientId);
-
-        if (!$patient) {
-            logger('@PatientWishToMeetDoctor patient with id ' . $patientId . ' not found');
-        }
 
         $this->queueId = $queueId;
         $this->doctorProfile = $doctorProfile;
         $this->patient = $patient;
 
         try {
-            logger('getting BPJS patient');
             $bpjsPatient = BPJS::getPatient($this->patient->nik);
-
-            logger('validating BPJS patient membership');
             $this->patient->BPJS = BPJS::validateMembership($bpjsPatient);
-            logger('validated BPJS patient membership');
         } catch (Exception $e) {
-            logger('there was an error while getting BPJS patient and/or validating his membership');
+            Logger('there was an error while getting BPJS patient and/or validating his membership');
             logger('error: ' . $e->getMessage());
         }
     }

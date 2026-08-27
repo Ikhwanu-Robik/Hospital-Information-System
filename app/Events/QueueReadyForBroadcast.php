@@ -23,12 +23,7 @@ class QueueReadyForBroadcast implements ShouldBroadcastNow
      */
     public function __construct($checkUpQueueId)
     {
-        logger('@QueueReadyForBroadcast getting check up queue of the given id');
         $checkUpQueue = CheckUpQueue::find($checkUpQueueId);
-
-        if (!$checkUpQueue) {
-            logger('@QueueReadyForBroadcast no check up queue for the given id=' . $checkUpQueueId);
-        }
 
         $this->locket = $checkUpQueue->locket;
         $this->queueNumber = $checkUpQueue->number . $checkUpQueue->locket->code;

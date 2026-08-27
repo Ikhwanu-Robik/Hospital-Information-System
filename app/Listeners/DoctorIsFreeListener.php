@@ -23,9 +23,6 @@ class DoctorIsFreeListener
      */
     public function handle(DoctorIsFree $event): void
     {
-        logger('@DoctorIsFreeListener awake!');
-
-        logger('getting the first waiting patient');
         $oldestQueue = CheckUpQueue::where('status', CheckUpStatus::WAITING->value)
             ->oldest('created_at')
             ->with(['doctorProfile', 'patient'])
@@ -33,12 +30,8 @@ class DoctorIsFreeListener
             ->first();
 
         if ($oldestQueue) {
-            logger($oldestQueue->toArray());
-
-            logger('dispatching QueueReadyForBroadcast');
             QueueReadyForBroadcast::dispatch($oldestQueue->id);
 
-            logger('dispatching PatientWisthToMeetDoctor');
             PatientWishToMeetDoctor::dispatch($oldestQueue->doctorProfile->id, $oldestQueue->patient->id, $oldestQueue->id);
         }
     }
